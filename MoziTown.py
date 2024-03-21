@@ -13,6 +13,7 @@ root.resizable(False, False)
 
 con = sqlite3.connect("mozitown.db")
 cur = con.cursor()
+cur.execute("PRAGMA foreign_keys = ON;")
 try:
     cur.execute("""CREATE TABLE termek(
                 Teremszam INT
