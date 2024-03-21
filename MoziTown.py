@@ -5,8 +5,11 @@ from ttkbootstrap import *
 from tkinter import PhotoImage
 import datetime as dt
 from time import strftime
+import os
+import PIL
 
 root = Window(themename="superhero")
+root.title("MoziTown")
 root.geometry("1400x762")
 root.resizable(False,False)
 root.configure(background="#181D31")
@@ -35,7 +38,7 @@ def hetfo():
     fri.configure(bootstyle="warning-outline")
     sat.configure(bootstyle="warning-outline")
     sun.configure(bootstyle="warning-outline")
-
+    musor.configure(text="Műsoron - hétfő")
 
 def kedd():
     tue.configure(bootstyle="warning")
@@ -45,7 +48,7 @@ def kedd():
     fri.configure(bootstyle="warning-outline")
     sat.configure(bootstyle="warning-outline")
     sun.configure(bootstyle="warning-outline")
-
+    musor.configure(text="Műsoron - kedd")
 
 def szerda():
     wed.configure(bootstyle="warning")
@@ -55,7 +58,7 @@ def szerda():
     fri.configure(bootstyle="warning-outline")
     sat.configure(bootstyle="warning-outline")
     sun.configure(bootstyle="warning-outline")
-
+    musor.configure(text="Műsoron - szerda")
 
 def csutotok():
     thu.configure(bootstyle="warning")
@@ -65,6 +68,7 @@ def csutotok():
     fri.configure(bootstyle="warning-outline")
     sat.configure(bootstyle="warning-outline")
     sun.configure(bootstyle="warning-outline")
+    musor.configure(text="Műsoron - csütörtök")
 
 
 def pentek():
@@ -75,7 +79,7 @@ def pentek():
     mon.configure(bootstyle="warning-outline")
     sat.configure(bootstyle="warning-outline")
     sun.configure(bootstyle="warning-outline")
-
+    musor.configure(text="Műsoron - péntek")
 
 def szombat():
     sat.configure(bootstyle="warning")
@@ -85,7 +89,7 @@ def szombat():
     fri.configure(bootstyle="warning-outline")
     mon.configure(bootstyle="warning-outline")
     sun.configure(bootstyle="warning-outline")
-
+    musor.configure(text="Műsoron - szombat")
 
 def vasarnap():
     sun.configure(bootstyle="warning")
@@ -95,11 +99,16 @@ def vasarnap():
     fri.configure(bootstyle="warning-outline")
     sat.configure(bootstyle="warning-outline")
     mon.configure(bootstyle="warning-outline")
+    musor.configure(text="Műsoron - vasárnap")
+
+
+style=ttk.Style().configure("frame_style", background="#181D31")
+
 
 napokfram=LabelFrame(root, border=0,)
 napokfram.pack(pady=10)
 
-mon=Button(napokfram,text="Hétfő", bootstyle="warning-outline", command=hetfo)
+mon=Button(napokfram,text="Hétfő", bootstyle="warning", command=hetfo)
 mon.grid(row=0, column=0,pady=(0,15),padx=15)
 tue=Button(napokfram,text="Kedd", bootstyle="warning-outline", command=kedd)
 tue.grid(row=0, column=1,pady=(0,15),padx=15)
@@ -113,26 +122,61 @@ sat=Button(napokfram,text="Szombat", bootstyle="warning-outline", command=szomba
 sat.grid(row=0, column=5,pady=(0,15),padx=15)
 sun=Button(napokfram,text="Vasárnap", bootstyle="warning-outline", command=vasarnap)
 sun.grid(row=0, column=6,pady=(0,15),padx=15)
+      
 
-if(f"{date:%A}"=="hétfő"):
-    mon.configure(bootstyle="warning")
-elif(f"{date:%A}"=="kedd"):
-    tue.configure(bootstyle="warning")
-elif(f"{date:%A}"=="szerda"):
-    wed.configure(bootstyle="warning")    
-elif(f"{date:%A}"=="csütörtök"):
-    thu.configure(bootstyle="warning")
-elif(f"{date:%A}"=="péntek"):
-    fri.configure(bootstyle="warning")
-elif(f"{date:%A}"=="szombat"):
-    sat.configure(bootstyle="warning")
-else:
-    sun.configure(bootstyle="warning")
+musor=Label(root,text="Műsoron - hétfő",font=('calibri', 25, 'bold'),background="#181D31")
+musor.pack(pady=(0,8))
 
-musor=Label(root,text="Műsoron",font=('calibri', 25, 'bold'),background="#181D31")
-musor.pack()
 
-img = PhotoImage(file="/pics/dune.png")
-kep1=Label(root, image=img)
-kep1.pack()
+filmekframe=LabelFrame(root, style="frame_style", )
+filmekframe.pack()
+
+film1=LabelFrame(filmekframe, width=240, height=500,border=0)
+film1.grid(row=0,column=0, padx=20,pady=0)
+
+film2=LabelFrame(filmekframe,width=240, height=500,border=0)
+film2.grid(row=0,column=1, padx=20)
+
+film3=LabelFrame(filmekframe, width=240, height=500,border=0)
+film3.grid(row=0,column=2, padx=20)
+
+film4=LabelFrame(filmekframe,width=240, height=500,border=0)
+film4.grid(row=0,column=3, padx=20)
+
+dune = Canvas(film1, width=250, height=370, bg='white')
+dune.pack()
+img1 = ImageTk.PhotoImage(Image.open("J:\ikt\mozijegy\mozijegy\dune.png"))  # PIL solution
+dune.create_image(0, 0, anchor=NW, image=img1)
+cim1=Label(film1,text="DŰNE - MÁSODIK RÉSZ",font=('calibri', 15, 'bold'))
+cim1.pack(pady=(6,0))
+buy1=Button(film1,text="Vásárlás", bootstyle="warning")
+buy1.pack(pady=6,padx=15,)
+
+most = Canvas(film2, width=250, height=370, bg='white')
+most.pack()
+img2 = ImageTk.PhotoImage(Image.open("J:\ikt\mozijegy\mozijegy\most.png"))  # PIL solution
+most.create_image(0, 0, anchor=NW, image=img2)
+cim2=Label(film2,text="MOST VAGY SOHA!",font=('calibri', 15, 'bold'))
+cim2.pack(pady=(6,0))
+buy2=Button(film2,text="Vásárlás", bootstyle="warning")
+buy2.pack(pady=6,padx=15,)
+
+imadlak = Canvas(film3, width=250, height=370, bg='white')
+imadlak.pack()
+img3 = ImageTk.PhotoImage(Image.open("J:\ikt\mozijegy\mozijegy\imadlak.png"))  # PIL solution
+imadlak.create_image(0, 0, anchor=NW, image=img3)
+cim3=Label(film3,text="IMÁDLAK UTÁLNI",font=('calibri', 15, 'bold'))
+cim3.pack(pady=(6,0))
+buy3=Button(film3,text="Vásárlás", bootstyle="warning")
+buy3.pack(pady=6,padx=15,)
+
+
+mehesz = Canvas(film4, width=250, height=370, bg='white')
+mehesz.pack()
+img4 = ImageTk.PhotoImage(Image.open("J:\ikt\mozijegy\mozijegy\mehesz.png"))  # PIL solution
+mehesz.create_image(0, 0, anchor=NW, image=img4)
+cim4=Label(film4,text="A MÉHÉSZ",font=('calibri', 15, 'bold'))
+cim4.pack(pady=(6,0))
+buy4=Button(film4,text="Vásárlás", bootstyle="warning")
+buy4.pack(pady=6,padx=15,)
 root.mainloop()
