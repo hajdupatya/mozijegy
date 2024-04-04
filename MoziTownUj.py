@@ -7,6 +7,8 @@ import datetime as dt
 from time import strftime
 import sqlite3
 
+global img1
+
 con = sqlite3.connect("mozitown.db")
 cur = con.cursor()
 cur.execute("PRAGMA foreign_keys = ON;")
@@ -40,8 +42,13 @@ def foglal_ablak():
     fcim = Label(fcimkeret, text="<Filmcím>", font=("Terminal", 20, "bold"), justify="center", anchor="center", width=90)
     fcim.grid(row=0, column=0, pady=5, sticky="nesw")
 
+    dune_al = Canvas(fog_ablak, width=250, height=370, bg='white')
+    dune_al.grid(row=0, column=0)
+    img1_al = ImageTk.PhotoImage(Image.open("dune.png"))
+    dune_al.create_image(0, 0, anchor=NW, image=img1_al)
+
     fkeret = LabelFrame(fog_ablak)
-    fkeret.grid(row=1, column=1, padx=20, pady=20, sticky="nse")
+    fkeret.grid(row=0, column=1)
 
     fleiras = Label(fkeret, text="<Film leírása>", font=("Times", 12, "bold"))
     fleiras.grid(row=0, column=0)
@@ -189,7 +196,7 @@ img1 = ImageTk.PhotoImage(Image.open("dune.png"))  # PIL solution
 dune.create_image(0, 0, anchor=NW, image=img1)
 cim1=Label(film1,text="DŰNE - MÁSODIK RÉSZ",font=('calibri', 15, 'bold'))
 cim1.pack(pady=(6,0))
-buy1=Button(film1,text="Vásárlás", bootstyle="warning")
+buy1=Button(film1,text="Vásárlás", bootstyle="warning", command=lambda: foglal_ablak())
 buy1.pack(pady=6,padx=15,)
 
 most = Canvas(film2, width=250, height=370, bg='white')
