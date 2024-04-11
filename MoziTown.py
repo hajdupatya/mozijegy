@@ -34,7 +34,7 @@ def time():
     string = strftime('%H:%M')
     ora.config(text=string)
     ora.after(1000, time)
- 
+
 ora = Label(cimframe, font=('calibri', 20, 'bold'),foreground='white')
 ora.grid(row=0, padx=20,column=1)
 time()
