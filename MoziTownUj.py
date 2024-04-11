@@ -35,7 +35,9 @@ except sqlite3.OperationalError or FileExistsError:
 def pdf_keszito():
     pdf = FPDF("P", "cm", "A4")
     pdf.add_page()
-    pdf.set_font_size()
+    pdf.set_font("times","","16")
+    pdf.cell(40, 10, "Foglalás")
+    pdf.output("pdf_1.pdf")
 
 def dune_foglal_ablak():
     fog_ablak = Toplevel(root)
