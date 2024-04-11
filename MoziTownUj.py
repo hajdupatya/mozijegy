@@ -6,6 +6,7 @@ from tkinter import PhotoImage
 import datetime as dt
 from time import strftime
 import sqlite3
+from fpdf import *
 
 global img1, img2, img3, img4
 
