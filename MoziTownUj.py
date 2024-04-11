@@ -42,14 +42,14 @@ def foglal_ablak():
     fcim = Label(fcimkeret, text="<Filmcím>", font=("Terminal", 20, "bold"), justify="center", anchor="center", width=90)
     fcim.grid(row=0, column=0, pady=5, sticky="nesw")
 
-    dune_al = Canvas(fog_ablak, width=250, height=370, bg='white')
+    fkepkeret = LabelFrame(fog_ablak)
+    fkepkeret.grid(row=1, column=0)
+    dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
-    img1_al = ImageTk.PhotoImage(Image.open("dune.png"))
-    dune_al.create_image(0, 0, anchor=NW, image=img1_al)
+    dune_al.create_image(0, 0, anchor=NW, image=img1)
 
     fkeret = LabelFrame(fog_ablak)
-    fkeret.grid(row=0, column=1)
-
+    fkeret.grid(row=1, column=1)
     fleiras = Label(fkeret, text="<Film leírása>", font=("Times", 12, "bold"))
     fleiras.grid(row=0, column=0)
     fszekek = Checkbutton(fkeret)
