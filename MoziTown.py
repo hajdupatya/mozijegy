@@ -6,8 +6,6 @@ from tkinter import PhotoImage
 import datetime as dt
 from time import strftime
 
-
-
 root = Window(themename="superhero")
 root.title("MoziTown")
 root.geometry("1400x762")
@@ -410,7 +408,6 @@ def imadlak_foglal_ablak():
     szek50.grid(row=5, column=9)
     ffoglal = Button(fkeret, text="Helyet foglalok")
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
-
 
 def mehesz_foglal_ablak():
     fog_ablak = Toplevel(root)
@@ -1032,6 +1029,8 @@ def szellemirtok_foglal_ablak():
     ffoglal = Button(fkeret, text="Helyet foglalok")
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
+
+
 def hetfo():
     mon.configure(bootstyle="warning")
     tue.configure(bootstyle="warning-outline")
@@ -1108,7 +1107,6 @@ def szerda():
     cim4.configure(text="SZELLEMIRTÓK ...")
     buy4.configure(command=szellemirtok_foglal_ablak)
 
-
 def csutotok():
     thu.configure(bootstyle="warning")
     tue.configure(bootstyle="warning-outline")
@@ -1134,7 +1132,6 @@ def csutotok():
     cim4.configure(text="GODZILLA X KONG: ...")
     buy4.configure(command=godzilla_foglal_ablak)
 
-
 def pentek():
     fri.configure(bootstyle="warning")
     tue.configure(bootstyle="warning-outline")
@@ -1144,7 +1141,7 @@ def pentek():
     sat.configure(bootstyle="warning-outline")
     sun.configure(bootstyle="warning-outline")
     musor.configure(text="Műsoron - péntek")
-    dune.create_image(0, 0, anchor=NW, image=img8)
+    dune.create_image(0, 0, anchor=NW, image=img6)
     cim1.configure(text="GODZILLA X KONG: ...")
     buy1.configure(command=godzilla_foglal_ablak)
 
@@ -1184,7 +1181,6 @@ def szombat():
     mehesz.create_image(0, 0, anchor=NW, image=img1)
     cim4.configure(text="DŰNE - MÁSODIK RÉSZ")
     buy4.configure(command=dune_foglal_ablak)
-
 
 def vasarnap():
     sun.configure(bootstyle="warning")
