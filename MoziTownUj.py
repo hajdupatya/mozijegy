@@ -10,6 +10,8 @@ from fpdf import *
 
 global img1, img2, img3, img4, img5, img6, img7, img8 
 
+date = dt.datetime.now()
+
 con = sqlite3.connect("mozitown.db")
 cur = con.cursor()
 cur.execute("PRAGMA foreign_keys = ON;")
@@ -33,11 +35,45 @@ except sqlite3.OperationalError or FileExistsError:
     pass
 
 def pdf_keszito():
-    pdf = FPDF("P", "cm", "A4")
+    title = "Foglalás"
+    class PDF(FPDF):
+        def header(self):
+            self.image("logo.png", w=50, h=50)
+            self.set_font("helvetica", "B", 10)
+            self.multi_cell(0, 5, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
+            title_w = self.get_string_width(title) + 6
+            doc_w = self.w
+            self.set_x((doc_w - title_w) / 2)
+            self.set_draw_color(0, 80, 180)
+            self.set_fill_color(230, 230, 0)
+            self.set_text_color(220, 50, 50)
+            self.set_line_width(1)
+            self.cell(title_w, 10, title, border=1, ln=1, align="C", fill=1)
+            self.ln(20)
+        def footer(self):
+            self.set_y(-15)
+            self.set_font("helvetica", "I", 10)
+            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
+        def body(self):
+            self.set_font("times", "", 12)
+            self.multi_cell(0, 5, "Részletek")
+            self.ln()
+    pdf = PDF("P", "mm", "A4")
+    #pdf.add_font("Tempus Sans ITC", "", r"C:\Windows\Fonts\TEMPSITC.TTF", uni=True)
+    pdf.set_title(title)
+    pdf.set_author("Mozitown csapata")
+    #pdf.alias_nb_pages()
+    pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
-    pdf.set_font("times","","16")
-    pdf.cell(40, 10, "Foglalás")
-    pdf.output("pdf_1.pdf")
+    
+    #pdf.set_font("times", "", 16)
+    #pdf.set_text_color(0, 0, 0)
+    #pdf.cell(120, 100, "Foglalás", ln=True)
+    #pdf.cell(80, 10, "Film neve")
+    #pdf.image("dune.png")
+    pdf.body()
+    pdf.output("pdf_jegy.pdf")
+
 
 def dune_foglal_ablak():
     fog_ablak = Toplevel(root)
@@ -1138,7 +1174,6 @@ def szerda():
     cim4.configure(text="SZELLEMIRTÓK ...")
     buy4.configure(command=lambda: szellemirtok_foglal_ablak())
 
-
 def csutotok():
     thu.configure(bootstyle="warning")
     tue.configure(bootstyle="warning-outline")
@@ -1163,7 +1198,6 @@ def csutotok():
     mehesz.create_image(0, 0, anchor=NW, image=img6)
     cim4.configure(text="GODZILLA X KONG: ...")
     buy4.configure(command=lambda: godzilla_foglal_ablak())
-
 
 def pentek():
     fri.configure(bootstyle="warning")
@@ -1214,7 +1248,6 @@ def szombat():
     mehesz.create_image(0, 0, anchor=NW, image=img1)
     cim4.configure(text="DŰNE - MÁSODIK RÉSZ")
     buy4.configure(command=lambda: dune_foglal_ablak())
-
 
 def vasarnap():
     sun.configure(bootstyle="warning")
@@ -1310,4 +1343,7 @@ cim4=Label(film4,text="A MÉHÉSZ",font=('calibri', 15, 'bold'))
 cim4.pack(pady=(6,0))
 buy4=Button(film4,text="Vásárlás", bootstyle="warning", command=lambda: mehesz_foglal_ablak())
 buy4.pack(pady=6,padx=15,)
+
+pdf_keszito()
+
 root.mainloop()
