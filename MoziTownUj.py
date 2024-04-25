@@ -7,8 +7,15 @@ import datetime as dt
 from time import strftime
 import sqlite3
 from fpdf import *
+import unicodedata
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
-global img1, img2, img3, img4, img5, img6, img7, img8 
+def unicode_normalize(s):
+    return unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
+
+global img1, img2, img3, img4, img5, img6, img7, img8, email
 
 date = dt.datetime.now()
 
@@ -34,46 +41,84 @@ try:
 except sqlite3.OperationalError or FileExistsError:
     pass
 
+def send_email(to_email):
+        # Email beállítások
+        email_address = "mozitown@gmail.com" # Add meg az email címedet
+        email_password = "moziTown2000" # Add meg az email jelszavadat
+        # Üzenet összeállítása
+        subject = "Sikeres vásárlás"
+        body = "Köszönjük a vásárlást!"
+        # Email küldése
+        msg = MIMEMultipart()
+        msg["From"] = email_address
+        msg["To"] = "11c-koban@ipari.vein.hu"
+        msg["Subject"] = subject
+        msg.attach(MIMEText(body, "plain"))
+        try:
+            server = smtplib.SMTP("smtp.gmail.com", 587)
+            server.starttls()
+            server.login(email_address, email_password)
+            text = msg.as_string()
+            server.sendmail(email_address, "11c-koban@ipari.vein.hu", text)
+            server.quit()
+            messagebox.showinfo("Sikeres vásárlás", "Az e-mail elküldve.")
+        except Exception as e:
+            messagebox.showerror("Hiba", f"Hiba történt az e-mail küldése közben: {str(e)}")
+
 def pdf_keszito():
     title = "Foglalás"
     class PDF(FPDF):
         def header(self):
-            self.image("logo.png", w=50, h=50)
-            self.set_font("helvetica", "B", 10)
-            self.multi_cell(0, 5, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
+            self.image("logo.png", 5, 5, 50, 50)
+            self.set_font("Helvetica", "BU", 20)
+            self.cell(40)
             title_w = self.get_string_width(title) + 6
             doc_w = self.w
             self.set_x((doc_w - title_w) / 2)
-            self.set_draw_color(0, 80, 180)
-            self.set_fill_color(230, 230, 0)
-            self.set_text_color(220, 50, 50)
             self.set_line_width(1)
-            self.cell(title_w, 10, title, border=1, ln=1, align="C", fill=1)
-            self.ln(20)
+            self.cell(title_w, 45, title, align="C")
+            self.set_font("Helvetica", "", 10)
+            self.cell(40)
+            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
+            self.ln(40)
+        def body(self):
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Részletek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Vásárló neve: \nVásárló E-mail címe: \nFilm neve: \nFilm hossza: \nIdopont: \nTerem száma: \nSzékek száma: ")
+            self.image("dune.png", 130, 75, 70, 100)
+            self.ln(40)
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Elérhetoségek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            telefon = "012436578659876"
+            self.multi_cell(0, 10, "Telefonszám: "+ telefon +" \nE-mail cím: ")
+            self.ln(10)
+            self.set_font("Helvetica", "B", 13)
+            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
+            self.ln(10)
+            self.set_font("Times", "B", 15)
+            self.set_text_color(255, 0, 0)
+            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
         def footer(self):
             self.set_y(-15)
-            self.set_font("helvetica", "I", 10)
+            self.set_font("Helvetica", "I", 10)
+            self.set_text_color(0, 0, 0)
             self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
-        def body(self):
-            self.set_font("times", "", 12)
-            self.multi_cell(0, 5, "Részletek")
-            self.ln()
     pdf = PDF("P", "mm", "A4")
-    #pdf.add_font("Tempus Sans ITC", "", r"C:\Windows\Fonts\TEMPSITC.TTF", uni=True)
     pdf.set_title(title)
     pdf.set_author("Mozitown csapata")
-    #pdf.alias_nb_pages()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
-    
-    #pdf.set_font("times", "", 16)
-    #pdf.set_text_color(0, 0, 0)
-    #pdf.cell(120, 100, "Foglalás", ln=True)
-    #pdf.cell(80, 10, "Film neve")
-    #pdf.image("dune.png")
     pdf.body()
     pdf.output("pdf_jegy.pdf")
-
+    email = "11c-koban@ipari.vein.hu"
+    if email:
+        send_email(email)
+    else:
+        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
 
 def dune_foglal_ablak():
     fog_ablak = Toplevel(root)
@@ -1345,5 +1390,16 @@ buy4=Button(film4,text="Vásárlás", bootstyle="warning", command=lambda: mehes
 buy4.pack(pady=6,padx=15,)
 
 pdf_keszito()
+#pdf comment:
+#pdf.add_font("Tempus Sans ITC", "", r"C:\Windows\Fonts\TEMPSITC.TTF", uni=True)
+#pdf.alias_nb_pages()
+#pdf.set_font("times", "", 16)
+#pdf.set_text_color(0, 0, 0)
+#pdf.cell(120, 100, "Foglalás", ln=True)
+#pdf.cell(80, 10, "Film neve")
+#pdf.image("dune.png")
+#self.set_draw_color(0, 80, 180)
+#self.set_fill_color(230, 230, 0)
+#self.set_text_color(0, 0, 0)
 
 root.mainloop()
