@@ -21,37 +21,54 @@ date = dt.datetime.now()
 
 con = sqlite3.connect("mozitown.db")
 cur = con.cursor()
-cur.execute("PRAGMA foreign_keys = ON;")
-try:
-    cur.execute("""CREATE TABLE termek(
-                Teremszam INT PRIMARY KEY,
-                Filmcim VARCHAR(32),
-                Filmev DATE,
-                Filmmufaj VARCHAR(16),
-                Fimhossz INT,
-                Teremkapacitas INT);
-    """)
-    cur.execute("""CREATE TABLE foglalasok(
-                Sorszam INT AUTO_INCREMENT PRIMARY KEY,
-                Keresztnev VARCHAR(32),
-                Vezeteknev VARCHAR(32),
-                Teremszam INT NOT NULL,
-                Szekszam INT);
-    """)
-except sqlite3.OperationalError or FileExistsError:
-    pass
+def adatbazis():
+    try:
+        cur.execute("SELECT * FROM film")
+    except Exception:
+        filmtable = """CREATE TABLE film (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            cim VARCHAR(50) NOT NULL,
+            hossz INT NOT NULL,
+            date DATE NOT NULL,
+            description TEXT NOT NULL );"""
+        cur.execute(filmtable)
+        vetitestable = """CREATE TABLE vetites (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            film_id INT NOT NULL,
+            ido DATETIME NOT NULL,
+            jegyar INT NOT NULL,
+            FOREIGN KEY (film_id) REFERENCES film(id) );"""
+        cur.execute(vetitestable)
+        jegytable = """CREATE TABLE jegy (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            vetites_id INT NOT NULL,
+            nev VARCHAR(50) NOT NULL,
+            FOREIGN KEY (vetites_id) REFERENCES vetites(id) );"""
+        cur.execute(jegytable)
+
+def add_film(nev, hossz, date, description):
+    command = f"""INSERT INTO film VALUES (NULL,'{nev}',{hossz},'{date}','{description}')"""
+    cur.execute(command)
+    con.commit()
+
+def add_vetites(film_id, ido, jegyar):
+    command = f"""INSERT INTO film VALUES (NULL,'{film_id}',{ido},'{jegyar}')"""
+    cur.execute(command)
+    con.commit()
+    
+def add_jegy(vetites_id, nev):
+    command = f"""INSERT INTO film VALUES (NULL,'{vetites_id}', {nev}')"""
+    cur.execute(command)
+    con.commit()
 
 def send_email(to_email):
-        # Email beállítások
-        email_address = "mozitown@gmail.com" # Add meg az email címedet
-        email_password = "moziTown2000" # Add meg az email jelszavadat
-        # Üzenet összeállítása
+        email_address = "mozitown@gmail.com"
+        email_password = "moziTown2000"
         subject = "Sikeres vásárlás"
         body = "Köszönjük a vásárlást!"
-        # Email küldése
         msg = MIMEMultipart()
         msg["From"] = email_address
-        msg["To"] = "11c-koban@ipari.vein.hu"
+        msg["To"] = to_email
         msg["Subject"] = subject
         msg.attach(MIMEText(body, "plain"))
         try:
@@ -59,14 +76,15 @@ def send_email(to_email):
             server.starttls()
             server.login(email_address, email_password)
             text = msg.as_string()
-            server.sendmail(email_address, "11c-koban@ipari.vein.hu", text)
+            server.sendmail(email_address, to_email, text)
             server.quit()
             messagebox.showinfo("Sikeres vásárlás", "Az e-mail elküldve.")
         except Exception as e:
             messagebox.showerror("Hiba", f"Hiba történt az e-mail küldése közben: {str(e)}")
 
-def pdf_keszito():
+def pdf_dune():
     title = "Foglalás"
+    email = "11c-koban@ipari.vein.hu"
     class PDF(FPDF):
         def header(self):
             self.image("logo.png", 5, 5, 50, 50)
@@ -86,15 +104,14 @@ def pdf_keszito():
             self.cell(0, 5, "Részletek:")
             self.ln(10)
             self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló neve: \nVásárló E-mail címe: \nFilm neve: \nFilm hossza: \nIdopont: \nTerem száma: \nSzékek száma: ")
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email + " \nFilm neve: DUNE - MÁSODIK RÉSZ\nFilm hossza: 166 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
             self.image("dune.png", 130, 75, 70, 100)
             self.ln(40)
             self.set_font("Helvetica", "BU", 15)
             self.cell(0, 5, "Elérhetoségek:")
             self.ln(10)
             self.set_font("Times", "", 13)
-            telefon = "012436578659876"
-            self.multi_cell(0, 10, "Telefonszám: "+ telefon +" \nE-mail cím: ")
+            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
             self.ln(10)
             self.set_font("Helvetica", "B", 13)
             self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
@@ -113,7 +130,388 @@ def pdf_keszito():
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
     pdf.body()
-    pdf.output("pdf_jegy.pdf")
+    pdf.output("pdf_dune.pdf")
+    send_email(email)
+
+def pdf_most():
+    title = "Foglalás"
+    email = "11c-koban@ipari.vein.hu"
+    class PDF(FPDF):
+        def header(self):
+            self.image("logo.png", 5, 5, 50, 50)
+            self.set_font("Helvetica", "BU", 20)
+            self.cell(40)
+            title_w = self.get_string_width(title) + 6
+            doc_w = self.w
+            self.set_x((doc_w - title_w) / 2)
+            self.set_line_width(1)
+            self.cell(title_w, 45, title, align="C")
+            self.set_font("Helvetica", "", 10)
+            self.cell(40)
+            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
+            self.ln(40)
+        def body(self):
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Részletek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: MOST VAGY SOHA!\nFilm hossza: 135 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.image("most.png", 130, 75, 70, 100)
+            self.ln(40)
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Elérhetoségek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
+            self.ln(10)
+            self.set_font("Helvetica", "B", 13)
+            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
+            self.ln(10)
+            self.set_font("Times", "B", 15)
+            self.set_text_color(255, 0, 0)
+            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
+        def footer(self):
+            self.set_y(-15)
+            self.set_font("Helvetica", "I", 10)
+            self.set_text_color(0, 0, 0)
+            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
+    pdf = PDF("P", "mm", "A4")
+    pdf.set_title(title)
+    pdf.set_author("Mozitown csapata")
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.body()
+    pdf.output("pdf_most.pdf")
+    email = "11c-koban@ipari.vein.hu"
+    if email:
+        send_email(email)
+    else:
+        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
+
+def pdf_imadlak():
+    title = "Foglalás"
+    email = "11c-koban@ipari.vein.hu"
+    class PDF(FPDF):
+        def header(self):
+            self.image("logo.png", 5, 5, 50, 50)
+            self.set_font("Helvetica", "BU", 20)
+            self.cell(40)
+            title_w = self.get_string_width(title) + 6
+            doc_w = self.w
+            self.set_x((doc_w - title_w) / 2)
+            self.set_line_width(1)
+            self.cell(title_w, 45, title, align="C")
+            self.set_font("Helvetica", "", 10)
+            self.cell(40)
+            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
+            self.ln(40)
+        def body(self):
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Részletek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: IMÁDLAK UTÁLNI\nFilm hossza: 100 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.image("imadlak.png", 130, 75, 70, 100)
+            self.ln(40)
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Elérhetoségek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
+            self.ln(10)
+            self.set_font("Helvetica", "B", 13)
+            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
+            self.ln(10)
+            self.set_font("Times", "B", 15)
+            self.set_text_color(255, 0, 0)
+            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
+        def footer(self):
+            self.set_y(-15)
+            self.set_font("Helvetica", "I", 10)
+            self.set_text_color(0, 0, 0)
+            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
+    pdf = PDF("P", "mm", "A4")
+    pdf.set_title(title)
+    pdf.set_author("Mozitown csapata")
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.body()
+    pdf.output("pdf_imadlak.pdf")
+    email = "11c-koban@ipari.vein.hu"
+    if email:
+        send_email(email)
+    else:
+        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
+
+def pdf_mehesz():
+    title = "Foglalás"
+    email = "11c-koban@ipari.vein.hu"
+    class PDF(FPDF):
+        def header(self):
+            self.image("logo.png", 5, 5, 50, 50)
+            self.set_font("Helvetica", "BU", 20)
+            self.cell(40)
+            title_w = self.get_string_width(title) + 6
+            doc_w = self.w
+            self.set_x((doc_w - title_w) / 2)
+            self.set_line_width(1)
+            self.cell(title_w, 45, title, align="C")
+            self.set_font("Helvetica", "", 10)
+            self.cell(40)
+            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
+            self.ln(40)
+        def body(self):
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Részletek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: A MÉHÉSZ\nFilm hossza: 105 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.image("mehesz.png", 130, 75, 70, 100)
+            self.ln(40)
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Elérhetoségek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
+            self.ln(10)
+            self.set_font("Helvetica", "B", 13)
+            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
+            self.ln(10)
+            self.set_font("Times", "B", 15)
+            self.set_text_color(255, 0, 0)
+            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
+        def footer(self):
+            self.set_y(-15)
+            self.set_font("Helvetica", "I", 10)
+            self.set_text_color(0, 0, 0)
+            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
+    pdf = PDF("P", "mm", "A4")
+    pdf.set_title(title)
+    pdf.set_author("Mozitown csapata")
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.body()
+    pdf.output("pdf_mehesz.pdf")
+    email = "11c-koban@ipari.vein.hu"
+    if email:
+        send_email(email)
+    else:
+        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
+
+def pdf_king():
+    title = "Foglalás"
+    email = "11c-koban@ipari.vein.hu"
+    class PDF(FPDF):
+        def header(self):
+            self.image("logo.png", 5, 5, 50, 50)
+            self.set_font("Helvetica", "BU", 20)
+            self.cell(40)
+            title_w = self.get_string_width(title) + 6
+            doc_w = self.w
+            self.set_x((doc_w - title_w) / 2)
+            self.set_line_width(1)
+            self.cell(title_w, 45, title, align="C")
+            self.set_font("Helvetica", "", 10)
+            self.cell(40)
+            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
+            self.ln(40)
+        def body(self):
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Részletek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: ARTÚR, A KIRÁLY\nFilm hossza: 107 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.image("king.png", 130, 75, 70, 100)
+            self.ln(40)
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Elérhetoségek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
+            self.ln(10)
+            self.set_font("Helvetica", "B", 13)
+            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
+            self.ln(10)
+            self.set_font("Times", "B", 15)
+            self.set_text_color(255, 0, 0)
+            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
+        def footer(self):
+            self.set_y(-15)
+            self.set_font("Helvetica", "I", 10)
+            self.set_text_color(0, 0, 0)
+            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
+    pdf = PDF("P", "mm", "A4")
+    pdf.set_title(title)
+    pdf.set_author("Mozitown csapata")
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.body()
+    pdf.output("pdf_king.pdf")
+    email = "11c-koban@ipari.vein.hu"
+    if email:
+        send_email(email)
+    else:
+        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
+
+def pdf_godzilla():
+    title = "Foglalás"
+    email = "11c-koban@ipari.vein.hu"
+    class PDF(FPDF):
+        def header(self):
+            self.image("logo.png", 5, 5, 50, 50)
+            self.set_font("Helvetica", "BU", 20)
+            self.cell(40)
+            title_w = self.get_string_width(title) + 6
+            doc_w = self.w
+            self.set_x((doc_w - title_w) / 2)
+            self.set_line_width(1)
+            self.cell(title_w, 45, title, align="C")
+            self.set_font("Helvetica", "", 10)
+            self.cell(40)
+            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
+            self.ln(40)
+        def body(self):
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Részletek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: GODZILLA X KONG: AZ ÚJ BIRODALOM\nFilm hossza: 115 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.image("godzilla.png", 130, 75, 70, 100)
+            self.ln(40)
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Elérhetoségek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
+            self.ln(10)
+            self.set_font("Helvetica", "B", 13)
+            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
+            self.ln(10)
+            self.set_font("Times", "B", 15)
+            self.set_text_color(255, 0, 0)
+            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
+        def footer(self):
+            self.set_y(-15)
+            self.set_font("Helvetica", "I", 10)
+            self.set_text_color(0, 0, 0)
+            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
+    pdf = PDF("P", "mm", "A4")
+    pdf.set_title(title)
+    pdf.set_author("Mozitown csapata")
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.body()
+    pdf.output("pdf_godzilla.pdf")
+    email = "11c-koban@ipari.vein.hu"
+    if email:
+        send_email(email)
+    else:
+        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
+
+def pdf_panda():
+    title = "Foglalás"
+    email = "11c-koban@ipari.vein.hu"
+    class PDF(FPDF):
+        def header(self):
+            self.image("logo.png", 5, 5, 50, 50)
+            self.set_font("Helvetica", "BU", 20)
+            self.cell(40)
+            title_w = self.get_string_width(title) + 6
+            doc_w = self.w
+            self.set_x((doc_w - title_w) / 2)
+            self.set_line_width(1)
+            self.cell(title_w, 45, title, align="C")
+            self.set_font("Helvetica", "", 10)
+            self.cell(40)
+            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
+            self.ln(40)
+        def body(self):
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Részletek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: KUNG FU PANDA 4\nFilm hossza: 94 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.image("panda.png", 130, 75, 70, 100)
+            self.ln(40)
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Elérhetoségek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
+            self.ln(10)
+            self.set_font("Helvetica", "B", 13)
+            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
+            self.ln(10)
+            self.set_font("Times", "B", 15)
+            self.set_text_color(255, 0, 0)
+            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
+        def footer(self):
+            self.set_y(-15)
+            self.set_font("Helvetica", "I", 10)
+            self.set_text_color(0, 0, 0)
+            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
+    pdf = PDF("P", "mm", "A4")
+    pdf.set_title(title)
+    pdf.set_author("Mozitown csapata")
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.body()
+    pdf.output("pdf_panda.pdf")
+    email = "11c-koban@ipari.vein.hu"
+    if email:
+        send_email(email)
+    else:
+        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
+
+def pdf_szellemirtok():
+    title = "Foglalás"
+    email = "11c-koban@ipari.vein.hu"
+    class PDF(FPDF):
+        def header(self):
+            self.image("logo.png", 5, 5, 50, 50)
+            self.set_font("Helvetica", "BU", 20)
+            self.cell(40)
+            title_w = self.get_string_width(title) + 6
+            doc_w = self.w
+            self.set_x((doc_w - title_w) / 2)
+            self.set_line_width(1)
+            self.cell(title_w, 45, title, align="C")
+            self.set_font("Helvetica", "", 10)
+            self.cell(40)
+            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
+            self.ln(40)
+        def body(self):
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Részletek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: SZELLEMIRTÓK - A BORZONGÁS BIRODALMA\nFilm hossza: 125 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.image("szellemirtok.png", 130, 75, 70, 100)
+            self.ln(40)
+            self.set_font("Helvetica", "BU", 15)
+            self.cell(0, 5, "Elérhetoségek:")
+            self.ln(10)
+            self.set_font("Times", "", 13)
+            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
+            self.ln(10)
+            self.set_font("Helvetica", "B", 13)
+            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
+            self.ln(10)
+            self.set_font("Times", "B", 15)
+            self.set_text_color(255, 0, 0)
+            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
+        def footer(self):
+            self.set_y(-15)
+            self.set_font("Helvetica", "I", 10)
+            self.set_text_color(0, 0, 0)
+            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
+    pdf = PDF("P", "mm", "A4")
+    pdf.set_title(title)
+    pdf.set_author("Mozitown csapata")
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.body()
+    pdf.output("pdf_szellemirtok.pdf")
     email = "11c-koban@ipari.vein.hu"
     if email:
         send_email(email)
@@ -241,7 +639,7 @@ def dune_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42")
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok")
+    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_dune())
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def most_foglal_ablak():
@@ -365,7 +763,7 @@ def most_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42")
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok")
+    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_most())
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def imadlak_foglal_ablak():
@@ -489,7 +887,7 @@ def imadlak_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42")
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok")
+    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_imadlak())
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def mehesz_foglal_ablak():
@@ -613,7 +1011,7 @@ def mehesz_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42")
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok")
+    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_mehesz())
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def king_foglal_ablak():
@@ -737,7 +1135,7 @@ def king_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42")
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok")
+    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_king())
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def godzilla_foglal_ablak():
@@ -861,7 +1259,7 @@ def godzilla_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42")
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok")
+    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_godzilla())
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def panda_foglal_ablak():
@@ -985,7 +1383,7 @@ def panda_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42")
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok")
+    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_panda())
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def szellemirtok_foglal_ablak():
@@ -1109,7 +1507,7 @@ def szellemirtok_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42")
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok")
+    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_szellemirtok())
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 root = Window(themename="superhero")
@@ -1388,18 +1786,5 @@ cim4=Label(film4,text="A MÉHÉSZ",font=('calibri', 15, 'bold'))
 cim4.pack(pady=(6,0))
 buy4=Button(film4,text="Vásárlás", bootstyle="warning", command=lambda: mehesz_foglal_ablak())
 buy4.pack(pady=6,padx=15,)
-
-pdf_keszito()
-#pdf comment:
-#pdf.add_font("Tempus Sans ITC", "", r"C:\Windows\Fonts\TEMPSITC.TTF", uni=True)
-#pdf.alias_nb_pages()
-#pdf.set_font("times", "", 16)
-#pdf.set_text_color(0, 0, 0)
-#pdf.cell(120, 100, "Foglalás", ln=True)
-#pdf.cell(80, 10, "Film neve")
-#pdf.image("dune.png")
-#self.set_draw_color(0, 80, 180)
-#self.set_fill_color(230, 230, 0)
-#self.set_text_color(0, 0, 0)
 
 root.mainloop()
