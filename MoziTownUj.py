@@ -55,7 +55,7 @@ def add_vetites(film_id, ido, jegyar):
     command = f"""INSERT INTO film VALUES (NULL,'{film_id}',{ido},'{jegyar}')"""
     cur.execute(command)
     con.commit()
-    
+
 def add_jegy(vetites_id, nev):
     command = f"""INSERT INTO film VALUES (NULL,'{vetites_id}', {nev}')"""
     cur.execute(command)
