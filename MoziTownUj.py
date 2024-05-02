@@ -46,18 +46,18 @@ def adatbazis():
             FOREIGN KEY (vetites_id) REFERENCES vetites(id) );"""
         cur.execute(jegytable)
 
-def add_film(nev, hossz, date, description):
+def add_film(nev: str, hossz: int, date: str, description: str):
     command = f"""INSERT INTO film VALUES (NULL,'{nev}',{hossz},'{date}','{description}')"""
     cur.execute(command)
     con.commit()
 
-def add_vetites(film_id, ido, jegyar):
-    command = f"""INSERT INTO film VALUES (NULL,'{film_id}',{ido},'{jegyar}')"""
+def add_vetites(film_id: int, ido: str, jegyar: int):
+    command = f"""INSERT INTO vetites VALUES (NULL,'{film_id}',{ido},'{jegyar}')"""
     cur.execute(command)
     con.commit()
 
-def add_jegy(vetites_id, nev):
-    command = f"""INSERT INTO film VALUES (NULL,'{vetites_id}', {nev}')"""
+def add_jegy(vetites_id: int, nev: str):
+    command = f"""INSERT INTO jegy VALUES (NULL,'{vetites_id}', {nev}')"""
     cur.execute(command)
     con.commit()
 
@@ -1281,7 +1281,7 @@ def panda_foglal_ablak():
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
-    fleiras = Label(fkeret, text="Csaknem egy évtized után tavasszal visszatér a legkülönösebb kungfu mester a DreamWorks Animation fergeteges sorozatának új fejezetében. Bátor Sárkányharcosként végigcsinált három halált megvető kalandot, és most a sors újabb feladat elé állítja: pihenjen már egy kicsit. Pontosabban hogy legyen a Békevölgy szellemi vezetője. Ezzel van néhány nyilvánvaló probléma. Egyrészt Po annyit tud a szellemi vezetésről, mint a paleodiétáról, másrészt gyorsan találnia kell egy új Sárkányharcost, és ki kell képeznie, mielőtt átvehetné új, magas beosztását. Ám ami még rosszabb, mostanában láttak felbukkanni egy gonosz, nagyhatalmú varázslónőt, Kaméleont, aki apró gyík létére fel tudja venni bármilyen lény alakját, legyen az nagy vagy kicsi. És Kaméleon ráveti dülledt kis szemét a bölcsesség pálcájára, amivel hatalmában állna megidézni az összes gonosztevőt, akiket Po átküldött a szellemek birodalmába. Pónak tehát segítségre lesz szüksége. Meg is találja – nagyjából – egy ravasz, gyors eszű tolvaj, Zhen személyében, aki egy pusztai róka, azaz korzak, és nagyon Po bögyében van, de a képességei felbecsülhetetlenül értékesek. Ha meg akarják védeni a Békevölgyet Kaméleon hüllőkarmaitól, akkor a komikus párosnak össze kell dolgoznia. És miközben zajlanak az izgalmas és mulatságos események, Po rájön, hogy a hősök bizony a legváratlanabb helyeken teremnek…", font=("Times", 12, "bold"), width=50, justify="left", wraplength=400)
+    fleiras = Label(fkeret, text="Csaknem egy évtized után tavasszal visszatér a legkülönösebb kungfu mester a DreamWorks Animation fergeteges sorozatának új fejezetében. Bátor Sárkányharcosként végigcsinált három halált megvető kalandot, és most a sors újabb feladat elé állítja: pihenjen már egy kicsit. Pontosabban hogy legyen a Békevölgy szellemi vezetője. Ezzel van néhány nyilvánvaló probléma. Egyrészt Po annyit tud a szellemi vezetésről, mint a paleodiétáról, másrészt gyorsan találnia kell egy új Sárkányharcost, és ki kell képeznie, mielőtt átvehetné új, magas beosztását. Ám ami még rosszabb, mostanában láttak felbukkanni egy gonosz, nagyhatalmú varázslónőt, Kaméleont, aki apró gyík létére fel tudja venni bármilyen lény alakját, legyen az nagy vagy kicsi. És Kaméleon ráveti dülledt kis szemét a bölcsesség pálcájára, amivel hatalmában állna megidézni az összes gonosztevőt, akiket Po átküldött a szellemek birodalmába...", font=("Times", 12, "bold"), width=50, justify="left", wraplength=400)
     fleiras.grid(row=0, column=0, columnspan=10)
     szek1 = Button(fkeret, state=NORMAL, text="01")
     szek1.grid(row=1, column=0, pady=10)
@@ -1509,6 +1509,64 @@ def szellemirtok_foglal_ablak():
     szek50.grid(row=5, column=9)
     ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_szellemirtok())
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
+
+adatbazis()
+
+dunenev = "DŰNE - MÁSODIK RÉSZ"
+dunehossz = 166
+dunedate = "2024-02-29"
+dunedesc = "A távoli jövőben, a bolygóközi királyságok korában játszódó történetben két nagyhatalmú uralkodóház harcol az Arrakis bolygó feletti hatalomért, mert az ismert univerzumban egyedül az itteni végtelen sivatagban bányászható az a fűszer, amely lehetővé teszi a csillagközi utazást. A Harkonnenek ura kiirtatta az Atreides családot. De Paul Atreides herceg (Timothée Chalamet) megmenekült: a pusztaságban bujkál egy titokzatos, nomád nép, a fremenek között, ahol megismerkedik egy lánnyal, Csanival (Zendaya). Az a sorsa, hogy bosszút álljon a családjáért, háborúba vezesse a hozzá hű seregeket. Döntenie kell, hogy élete nagy szerelmét választja-e, vagy beteljesíti a végzetét. Az univerzum sorsa múlik azon, hogy mit határoz: és végül olyan útra lép, amely megváltoztathatja azt a szörnyű jövőt, amelyet egyedül ő lát előre."
+
+add_film(dunenev, dunehossz, dunedate, dunedesc)
+
+mostnev = "MOST VAGY SOHA!"
+mosthossz = 135
+mostdate = "2024-03-14"
+mostdesc = "Amikor 1848. március 15-én a lánglelkű költő, Petőfi Sándor költeményével, a Nemzeti Dallal kirobbantja a magyar forradalmat, az osztrák elnyomók egy titkosügynököt bíznak meg a feladattal, hogy állítsa meg a felkelést."
+
+add_film(mostnev, mosthossz, mostdate, mostdesc)
+
+imadlaknev = "IMÁDLAK UTÁLNI"
+imadlakhossz = 100
+imadlakdate = "2024-01-18"
+imadlakdesc = "Találkoztak, együtt töltöttek egy éjszakát, és azóta gyűlölik egymást. Van ilyen. Bea (Sydney Sweeney) és Ben (Glen Powell) biztos, hogy nem illenek össze. Ha néha véletlenül összefutnak valahol, tutira elszabadul a pokol: csak bántani tudják egymást. De lesz egy esküvő Ausztráliában, amin mindkettejüknek részt kell venniük. Nincs kibúvó, nincs duma: utazniuk kell. Néhány napon, néhány bulin, néhány vacsorán keresztül el kell viselniük egymás közelségét, miközben egy gyönyörű tengerparti házban ott kavarog körülöttük egy csomó régi szerelmük, néhány kíváncsi rokonuk és kavarni mindig kész felmenőjük. Szóval, azt teszik, amit két érett, felnőtt, felelősségteljes ember ilyenkor tehet: úgy tesznek, mintha szerelmespár lennének – azt remélik, hogy így mindenkinek könnyebb lesz. Nem is tévedhettek volna nagyobbat.Amikor 1848. március 15-én a lánglelkű költő, Petőfi Sándor költeményével, a Nemzeti Dallal kirobbantja a magyar forradalmat, az osztrák elnyomók egy titkosügynököt bíznak meg a feladattal, hogy állítsa meg a felkelést."
+
+add_film(imadlaknev, imadlakhossz, imadlakdate, imadlakdesc)
+
+mehesznev = "A MÉHÉSZ"
+meheszhossz = 105
+meheszdate = "2024-01-11"
+meheszdesc = "Egy férfi egyszemélyes, brutális bosszúhadjáratának tétje országos szintűre nő, miután kiderül róla, hogy korábban a Méhészek néven ismert befolyásos és titkos szervezet ügynöke volt."
+
+add_film(mehesznev, meheszhossz, meheszdate, meheszdesc)
+
+kingnev = "ARTÚR, A KIRÁLY"
+kinghossz = 107
+kingdate = "2024-03-21"
+kingdesc = "Michael Light (Mark Wahlberg) és elszánt csapata a Dominikai Köztársaság dzsungelében teszi próbára magát egy rendkívüli 10 napos, 700 kilométeres extrémsport-világbajnokságon. A kalandvágyó sportember életében ez az utolsó lehetőség, hogy a régen áhított első helyezést elérje, a túra során azonban váratlanul egy ágrólszakadt kóborkutya szegődik melléjük. Michael és a különös, mégis méltóságteljes állat között hamarosan megbonthatatlan barátság szövődik, és a verseny végére Michael számára a győzelem, a hűség és a barátság jelentése merőben új értelmet nyer."
+
+add_film(kingnev, kinghossz, kingdate, kingdesc)
+
+godzillanev = "GODZILLA X KONG: AZ ÚJ BIRODALOM"
+godzillahossz = 115
+godzilladate = "2024-03-28"
+godzilladesc = "A mindent eldöntő, minden eddiginél nagyobb háború nem ért véget azzal, hogy Kong és Godzilla szembetalálkozott és összemérte az erejét. Mert az ember most már kénytelen belenyugodni, hogy nem ő a legerősebb a földön. És nem ismeri igazán a saját világát: várja még néhány eddig rejtve maradt meglepetés. Bujkál még valami a föld alatt, ami felébredt, és pusztítani akar. Az emberiség képtelen megállítani. Talán Kong is képtelen volna. És Godzilla is. De ha ők ketten összefognának, akkor esetleg megmenekülhetnének ők is és mi is…"
+
+add_film(mostnev, mosthossz, mostdate, mostdesc)
+
+pandanev = "KUNG FU PANDA 4"
+pandahossz = 94
+pandadate = "2024-03-21"
+pandadesc = "Csaknem egy évtized után tavasszal visszatér a legkülönösebb kungfu mester a DreamWorks Animation fergeteges sorozatának baresz új fejezetében. Bátor Sárkányharcosként végigcsinált három halált megvető kalandot, és most a sors újabb feladat elé állítja: pihenjen már egy kicsit. Pontosabban hogy legyen a Békevölgy szellemi vezetője. Ezzel van néhány nyilvánvaló probléma. Egyrészt Po annyit tud a szellemi vezetésről, mint a paleodiétáról, másrészt gyorsan találnia kell egy új Sárkányharcost, és ki kell képeznie, mielőtt átvehetné új, magas beosztását. Ám ami még rosszabb, mostanában láttak felbukkanni egy gonosz, nagy hatalmú varázslónőt, Kaméleont, aki apró gyík létére fel tudja venni bármilyen lény alakját, legyen az nagy vagy kicsi. És Kaméleon ráveti dülledt kis szemét a bölcsesség pálcájára, amivel hatalmában állna megidézni az összes gonosztevőt, akiket Po átküldött a szellemek birodalmába..."
+
+add_film(pandanev, pandahossz, pandadate, pandadesc)
+
+szellemirtoknev = "SZELLEMIRTÓK - A BORZONGÁS BIRODALMA"
+szellemirtokhossz = 125
+szellemirtokdate = "2024-04-11"
+szellemirtokdesc = "Kihez fordulsz nagy bajban? Kitől kérsz segítséget, amikor kísérteties lények vesznek üldözőbe? Az egyértelmű válasz: a Szellemirtókat! A legendás csapat azonban már nem az eredeti felállásban dolgozik. A változás ellenére a híres New York-i tűzoltóság viszont továbbra is működik. Itt találkoznak az új Szellemirtók, a Spengler család tagjai az eredeti csapattal, akik, mint kiderül, nem vonultak vissza, hanem egy titkos kísérleti laboratóriumot hoztak létre, hogy szellemirtó törekvéseiket újabb szintre emeljék. Terveik váratlan fordulatot vesznek, amikor egy ősi ereklyére bukkannak, amely rosszindulatú erőt szabadít fel. Most mind a tapasztalt, mind a fiatal Szellemirtóknak össze kell fogniuk, hogy meghiúsítsák a világ közelgő veszélyét – a közelgő és még inkább dermesztő jégkorszakot. A legendás film szereplőgárdája, köztük Bill Murray és Dan Aykroyd diadalmasan tér vissza, vegyítve a humort a sci-fivel és a hátborzongató találkozásokat a laza tréfálkozással. Hozzájuk csatlakoznak az új generációs színészek, mint Paul Rudd és Finn Wolfhard a szeretett saga folytatásában."
+
+add_film(szellemirtoknev, szellemirtokhossz, szellemirtokdate, szellemirtokdesc)
 
 root = Window(themename="superhero")
 root.title("MoziTown")
@@ -1763,6 +1821,7 @@ cim1.pack(pady=(6,0))
 buy1=Button(film1,text="Vásárlás", bootstyle="warning", command=lambda: dune_foglal_ablak())
 buy1.pack(pady=6,padx=15,)
 
+
 most = Canvas(film2, width=250, height=370, bg='white')
 most.pack()
 most.create_image(0, 0, anchor=NW, image=img2)
@@ -1770,6 +1829,7 @@ cim2=Label(film2,text="MOST VAGY SOHA!",font=('calibri', 15, 'bold'))
 cim2.pack(pady=(6,0))
 buy2=Button(film2,text="Vásárlás", bootstyle="warning", command=lambda: most_foglal_ablak())
 buy2.pack(pady=6,padx=15,)
+
 
 imadlak = Canvas(film3, width=250, height=370, bg='white')
 imadlak.pack()
@@ -1779,6 +1839,7 @@ cim3.pack(pady=(6,0))
 buy3=Button(film3,text="Vásárlás", bootstyle="warning", command=lambda: imadlak_foglal_ablak())
 buy3.pack(pady=6,padx=15,)
 
+
 mehesz = Canvas(film4, width=250, height=370, bg='white')
 mehesz.pack()
 mehesz.create_image(0, 0, anchor=NW, image=img4)
@@ -1786,5 +1847,6 @@ cim4=Label(film4,text="A MÉHÉSZ",font=('calibri', 15, 'bold'))
 cim4.pack(pady=(6,0))
 buy4=Button(film4,text="Vásárlás", bootstyle="warning", command=lambda: mehesz_foglal_ablak())
 buy4.pack(pady=6,padx=15,)
+
 
 root.mainloop()
