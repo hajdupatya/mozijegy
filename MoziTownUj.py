@@ -95,8 +95,8 @@ def add_vetites(film_id: int, ido: str, jegyar: int):
     cur.execute(command)
     con.commit()
 
-def add_jegy(vetites_id: int, nev: str):
-    command = f"""INSERT INTO jegy VALUES (NULL,'{vetites_id}', '{nev}')"""
+def add_jegy(vetites_id: int, nev: str, hely: int):
+    command = f"""INSERT INTO jegy VALUES (NULL,'{vetites_id}', '{nev}', '{hely}')"""
     cur.execute(command)
     con.commit()
 
