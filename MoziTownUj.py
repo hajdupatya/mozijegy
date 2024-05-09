@@ -11,6 +11,7 @@ import unicodedata
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import random
 
 def unicode_normalize(s):
     return unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
@@ -24,6 +25,7 @@ cur = con.cursor()
 def adatbazis():
     try:
         cur.execute("SELECT * FROM film")
+        return
     except Exception:
         filmtable = """CREATE TABLE film (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,7 +37,7 @@ def adatbazis():
         vetitestable = """CREATE TABLE vetites (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             film_id INT NOT NULL,
-            ido DATETIME NOT NULL,
+            ido VARCHAR(10) NOT NULL,
             jegyar INT NOT NULL,
             FOREIGN KEY (film_id) REFERENCES film(id) );"""
         cur.execute(vetitestable)
@@ -45,19 +47,31 @@ def adatbazis():
             nev VARCHAR(50) NOT NULL,
             FOREIGN KEY (vetites_id) REFERENCES vetites(id) );"""
         cur.execute(jegytable)
+        add_film(dunenev, dunehossz, dunedate, dunedesc)
+        add_film(mostnev, mosthossz, mostdate, mostdesc)
+        add_film(imadlaknev, imadlakhossz, imadlakdate, imadlakdesc)
+        add_film(kingnev, kinghossz, kingdate, kingdesc)
+        add_film(mehesznev, meheszhossz, meheszdate, meheszdesc)
+        add_film(pandanev, pandahossz, pandadate, pandadesc)
+        add_film(szellemirtoknev, szellemirtokhossz, szellemirtokdate, szellemirtokdesc)
+        add_vetites(vetites1film, vetites1ido, vetites1ar)
+        add_vetites(vetites2film, vetites2ido, vetites2ar)
+        add_vetites(vetites3film, vetites3ido, vetites3ar)
+        add_vetites(vetites4film, vetites4ido, vetites4ar)
+
 
 def add_film(nev: str, hossz: int, date: str, description: str):
-    command = f"""INSERT INTO film VALUES (NULL,'{nev}',{hossz},'{date}','{description}')"""
+    command = f"""INSERT INTO film VALUES (NULL,'{nev}','{hossz}','{date}','{description}')"""
     cur.execute(command)
     con.commit()
 
 def add_vetites(film_id: int, ido: str, jegyar: int):
-    command = f"""INSERT INTO vetites VALUES (NULL,'{film_id}',{ido},'{jegyar}')"""
+    command = f"""INSERT INTO vetites VALUES (NULL,'{film_id}','{ido}','{jegyar}')"""
     cur.execute(command)
     con.commit()
 
 def add_jegy(vetites_id: int, nev: str):
-    command = f"""INSERT INTO jegy VALUES (NULL,'{vetites_id}', {nev}')"""
+    command = f"""INSERT INTO jegy VALUES (NULL,'{vetites_id}', '{nev}')"""
     cur.execute(command)
     con.commit()
 
@@ -85,6 +99,7 @@ def send_email(to_email):
 def pdf_dune():
     title = "Foglalás"
     email = "11c-koban@ipari.vein.hu"
+    terem = "1"
     class PDF(FPDF):
         def header(self):
             self.image("logo.png", 5, 5, 50, 50)
@@ -104,7 +119,7 @@ def pdf_dune():
             self.cell(0, 5, "Részletek:")
             self.ln(10)
             self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email + " \nFilm neve: DUNE - MÁSODIK RÉSZ\nFilm hossza: 166 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email + " \nFilm neve: DUNE - MÁSODIK RÉSZ\nFilm hossza: 166 perc\nIdopont: Valamikor\nTerem száma: " + terem +"\nSzékek száma: Sok")
             self.image("dune.png", 130, 75, 70, 100)
             self.ln(40)
             self.set_font("Helvetica", "BU", 15)
@@ -136,6 +151,7 @@ def pdf_dune():
 def pdf_most():
     title = "Foglalás"
     email = "11c-koban@ipari.vein.hu"
+    terem = "1"
     class PDF(FPDF):
         def header(self):
             self.image("logo.png", 5, 5, 50, 50)
@@ -155,7 +171,7 @@ def pdf_most():
             self.cell(0, 5, "Részletek:")
             self.ln(10)
             self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: MOST VAGY SOHA!\nFilm hossza: 135 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: MOST VAGY SOHA!\nFilm hossza: 135 perc\nIdopont: Valamikor\nTerem száma: " + terem +"\nSzékek száma: Sok")
             self.image("most.png", 130, 75, 70, 100)
             self.ln(40)
             self.set_font("Helvetica", "BU", 15)
@@ -191,6 +207,7 @@ def pdf_most():
 def pdf_imadlak():
     title = "Foglalás"
     email = "11c-koban@ipari.vein.hu"
+    terem = "2"
     class PDF(FPDF):
         def header(self):
             self.image("logo.png", 5, 5, 50, 50)
@@ -210,7 +227,7 @@ def pdf_imadlak():
             self.cell(0, 5, "Részletek:")
             self.ln(10)
             self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: IMÁDLAK UTÁLNI\nFilm hossza: 100 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: IMÁDLAK UTÁLNI\nFilm hossza: 100 perc\nIdopont: Valamikor\nTerem száma:" + terem + "\nSzékek száma: Sok")
             self.image("imadlak.png", 130, 75, 70, 100)
             self.ln(40)
             self.set_font("Helvetica", "BU", 15)
@@ -246,6 +263,7 @@ def pdf_imadlak():
 def pdf_mehesz():
     title = "Foglalás"
     email = "11c-koban@ipari.vein.hu"
+    terem = "2"
     class PDF(FPDF):
         def header(self):
             self.image("logo.png", 5, 5, 50, 50)
@@ -265,7 +283,7 @@ def pdf_mehesz():
             self.cell(0, 5, "Részletek:")
             self.ln(10)
             self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: A MÉHÉSZ\nFilm hossza: 105 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: A MÉHÉSZ\nFilm hossza: 105 perc\nIdopont: Valamikor\nTerem száma: " + terem +"\nSzékek száma: Sok")
             self.image("mehesz.png", 130, 75, 70, 100)
             self.ln(40)
             self.set_font("Helvetica", "BU", 15)
@@ -301,6 +319,7 @@ def pdf_mehesz():
 def pdf_king():
     title = "Foglalás"
     email = "11c-koban@ipari.vein.hu"
+    terem = "3"
     class PDF(FPDF):
         def header(self):
             self.image("logo.png", 5, 5, 50, 50)
@@ -320,7 +339,7 @@ def pdf_king():
             self.cell(0, 5, "Részletek:")
             self.ln(10)
             self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: ARTÚR, A KIRÁLY\nFilm hossza: 107 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: ARTÚR, A KIRÁLY\nFilm hossza: 107 perc\nIdopont: Valamikor\nTerem száma: " + terem +"\nSzékek száma: Sok")
             self.image("king.png", 130, 75, 70, 100)
             self.ln(40)
             self.set_font("Helvetica", "BU", 15)
@@ -356,6 +375,7 @@ def pdf_king():
 def pdf_godzilla():
     title = "Foglalás"
     email = "11c-koban@ipari.vein.hu"
+    terem = "3"
     class PDF(FPDF):
         def header(self):
             self.image("logo.png", 5, 5, 50, 50)
@@ -375,7 +395,7 @@ def pdf_godzilla():
             self.cell(0, 5, "Részletek:")
             self.ln(10)
             self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: GODZILLA X KONG: AZ ÚJ BIRODALOM\nFilm hossza: 115 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: GODZILLA X KONG: AZ ÚJ BIRODALOM\nFilm hossza: 115 perc\nIdopont: Valamikor\nTerem száma: " + terem +"\nSzékek száma: Sok")
             self.image("godzilla.png", 130, 75, 70, 100)
             self.ln(40)
             self.set_font("Helvetica", "BU", 15)
@@ -411,6 +431,7 @@ def pdf_godzilla():
 def pdf_panda():
     title = "Foglalás"
     email = "11c-koban@ipari.vein.hu"
+    terem = "4"
     class PDF(FPDF):
         def header(self):
             self.image("logo.png", 5, 5, 50, 50)
@@ -430,7 +451,7 @@ def pdf_panda():
             self.cell(0, 5, "Részletek:")
             self.ln(10)
             self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: KUNG FU PANDA 4\nFilm hossza: 94 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: KUNG FU PANDA 4\nFilm hossza: 94 perc\nIdopont: Valamikor\nTerem száma: " + terem + "\nSzékek száma: Sok")
             self.image("panda.png", 130, 75, 70, 100)
             self.ln(40)
             self.set_font("Helvetica", "BU", 15)
@@ -466,6 +487,7 @@ def pdf_panda():
 def pdf_szellemirtok():
     title = "Foglalás"
     email = "11c-koban@ipari.vein.hu"
+    terem = "4"
     class PDF(FPDF):
         def header(self):
             self.image("logo.png", 5, 5, 50, 50)
@@ -485,7 +507,7 @@ def pdf_szellemirtok():
             self.cell(0, 5, "Részletek:")
             self.ln(10)
             self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: SZELLEMIRTÓK - A BORZONGÁS BIRODALMA\nFilm hossza: 125 perc\nIdopont: Valamikor\nTerem száma: Valamelyik\nSzékek száma: Sok")
+            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: SZELLEMIRTÓK - A BORZONGÁS BIRODALMA\nFilm hossza: 125 perc\nIdopont: Valamikor\nTerem száma: " + terem + "\nSzékek száma: Sok")
             self.image("szellemirtok.png", 130, 75, 70, 100)
             self.ln(40)
             self.set_font("Helvetica", "BU", 15)
@@ -1510,63 +1532,160 @@ def szellemirtok_foglal_ablak():
     ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_szellemirtok())
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
-adatbazis()
 
 dunenev = "DŰNE - MÁSODIK RÉSZ"
 dunehossz = 166
 dunedate = "2024-02-29"
 dunedesc = "A távoli jövőben, a bolygóközi királyságok korában játszódó történetben két nagyhatalmú uralkodóház harcol az Arrakis bolygó feletti hatalomért, mert az ismert univerzumban egyedül az itteni végtelen sivatagban bányászható az a fűszer, amely lehetővé teszi a csillagközi utazást. A Harkonnenek ura kiirtatta az Atreides családot. De Paul Atreides herceg (Timothée Chalamet) megmenekült: a pusztaságban bujkál egy titokzatos, nomád nép, a fremenek között, ahol megismerkedik egy lánnyal, Csanival (Zendaya). Az a sorsa, hogy bosszút álljon a családjáért, háborúba vezesse a hozzá hű seregeket. Döntenie kell, hogy élete nagy szerelmét választja-e, vagy beteljesíti a végzetét. Az univerzum sorsa múlik azon, hogy mit határoz: és végül olyan útra lép, amely megváltoztathatja azt a szörnyű jövőt, amelyet egyedül ő lát előre."
 
-add_film(dunenev, dunehossz, dunedate, dunedesc)
-
 mostnev = "MOST VAGY SOHA!"
 mosthossz = 135
 mostdate = "2024-03-14"
 mostdesc = "Amikor 1848. március 15-én a lánglelkű költő, Petőfi Sándor költeményével, a Nemzeti Dallal kirobbantja a magyar forradalmat, az osztrák elnyomók egy titkosügynököt bíznak meg a feladattal, hogy állítsa meg a felkelést."
-
-add_film(mostnev, mosthossz, mostdate, mostdesc)
 
 imadlaknev = "IMÁDLAK UTÁLNI"
 imadlakhossz = 100
 imadlakdate = "2024-01-18"
 imadlakdesc = "Találkoztak, együtt töltöttek egy éjszakát, és azóta gyűlölik egymást. Van ilyen. Bea (Sydney Sweeney) és Ben (Glen Powell) biztos, hogy nem illenek össze. Ha néha véletlenül összefutnak valahol, tutira elszabadul a pokol: csak bántani tudják egymást. De lesz egy esküvő Ausztráliában, amin mindkettejüknek részt kell venniük. Nincs kibúvó, nincs duma: utazniuk kell. Néhány napon, néhány bulin, néhány vacsorán keresztül el kell viselniük egymás közelségét, miközben egy gyönyörű tengerparti házban ott kavarog körülöttük egy csomó régi szerelmük, néhány kíváncsi rokonuk és kavarni mindig kész felmenőjük. Szóval, azt teszik, amit két érett, felnőtt, felelősségteljes ember ilyenkor tehet: úgy tesznek, mintha szerelmespár lennének – azt remélik, hogy így mindenkinek könnyebb lesz. Nem is tévedhettek volna nagyobbat.Amikor 1848. március 15-én a lánglelkű költő, Petőfi Sándor költeményével, a Nemzeti Dallal kirobbantja a magyar forradalmat, az osztrák elnyomók egy titkosügynököt bíznak meg a feladattal, hogy állítsa meg a felkelést."
 
-add_film(imadlaknev, imadlakhossz, imadlakdate, imadlakdesc)
-
 mehesznev = "A MÉHÉSZ"
 meheszhossz = 105
 meheszdate = "2024-01-11"
 meheszdesc = "Egy férfi egyszemélyes, brutális bosszúhadjáratának tétje országos szintűre nő, miután kiderül róla, hogy korábban a Méhészek néven ismert befolyásos és titkos szervezet ügynöke volt."
-
-add_film(mehesznev, meheszhossz, meheszdate, meheszdesc)
 
 kingnev = "ARTÚR, A KIRÁLY"
 kinghossz = 107
 kingdate = "2024-03-21"
 kingdesc = "Michael Light (Mark Wahlberg) és elszánt csapata a Dominikai Köztársaság dzsungelében teszi próbára magát egy rendkívüli 10 napos, 700 kilométeres extrémsport-világbajnokságon. A kalandvágyó sportember életében ez az utolsó lehetőség, hogy a régen áhított első helyezést elérje, a túra során azonban váratlanul egy ágrólszakadt kóborkutya szegődik melléjük. Michael és a különös, mégis méltóságteljes állat között hamarosan megbonthatatlan barátság szövődik, és a verseny végére Michael számára a győzelem, a hűség és a barátság jelentése merőben új értelmet nyer."
 
-add_film(kingnev, kinghossz, kingdate, kingdesc)
-
 godzillanev = "GODZILLA X KONG: AZ ÚJ BIRODALOM"
 godzillahossz = 115
 godzilladate = "2024-03-28"
 godzilladesc = "A mindent eldöntő, minden eddiginél nagyobb háború nem ért véget azzal, hogy Kong és Godzilla szembetalálkozott és összemérte az erejét. Mert az ember most már kénytelen belenyugodni, hogy nem ő a legerősebb a földön. És nem ismeri igazán a saját világát: várja még néhány eddig rejtve maradt meglepetés. Bujkál még valami a föld alatt, ami felébredt, és pusztítani akar. Az emberiség képtelen megállítani. Talán Kong is képtelen volna. És Godzilla is. De ha ők ketten összefognának, akkor esetleg megmenekülhetnének ők is és mi is…"
-
-add_film(mostnev, mosthossz, mostdate, mostdesc)
 
 pandanev = "KUNG FU PANDA 4"
 pandahossz = 94
 pandadate = "2024-03-21"
 pandadesc = "Csaknem egy évtized után tavasszal visszatér a legkülönösebb kungfu mester a DreamWorks Animation fergeteges sorozatának baresz új fejezetében. Bátor Sárkányharcosként végigcsinált három halált megvető kalandot, és most a sors újabb feladat elé állítja: pihenjen már egy kicsit. Pontosabban hogy legyen a Békevölgy szellemi vezetője. Ezzel van néhány nyilvánvaló probléma. Egyrészt Po annyit tud a szellemi vezetésről, mint a paleodiétáról, másrészt gyorsan találnia kell egy új Sárkányharcost, és ki kell képeznie, mielőtt átvehetné új, magas beosztását. Ám ami még rosszabb, mostanában láttak felbukkanni egy gonosz, nagy hatalmú varázslónőt, Kaméleont, aki apró gyík létére fel tudja venni bármilyen lény alakját, legyen az nagy vagy kicsi. És Kaméleon ráveti dülledt kis szemét a bölcsesség pálcájára, amivel hatalmában állna megidézni az összes gonosztevőt, akiket Po átküldött a szellemek birodalmába..."
 
-add_film(pandanev, pandahossz, pandadate, pandadesc)
-
 szellemirtoknev = "SZELLEMIRTÓK - A BORZONGÁS BIRODALMA"
 szellemirtokhossz = 125
 szellemirtokdate = "2024-04-11"
 szellemirtokdesc = "Kihez fordulsz nagy bajban? Kitől kérsz segítséget, amikor kísérteties lények vesznek üldözőbe? Az egyértelmű válasz: a Szellemirtókat! A legendás csapat azonban már nem az eredeti felállásban dolgozik. A változás ellenére a híres New York-i tűzoltóság viszont továbbra is működik. Itt találkoznak az új Szellemirtók, a Spengler család tagjai az eredeti csapattal, akik, mint kiderül, nem vonultak vissza, hanem egy titkos kísérleti laboratóriumot hoztak létre, hogy szellemirtó törekvéseiket újabb szintre emeljék. Terveik váratlan fordulatot vesznek, amikor egy ősi ereklyére bukkannak, amely rosszindulatú erőt szabadít fel. Most mind a tapasztalt, mind a fiatal Szellemirtóknak össze kell fogniuk, hogy meghiúsítsák a világ közelgő veszélyét – a közelgő és még inkább dermesztő jégkorszakot. A legendás film szereplőgárdája, köztük Bill Murray és Dan Aykroyd diadalmasan tér vissza, vegyítve a humort a sci-fivel és a hátborzongató találkozásokat a laza tréfálkozással. Hozzájuk csatlakoznak az új generációs színészek, mint Paul Rudd és Finn Wolfhard a szeretett saga folytatásában."
 
-add_film(szellemirtoknev, szellemirtokhossz, szellemirtokdate, szellemirtokdesc)
+vetites1film = 1
+vetites1ido = "Hétfő"
+vetites1ar = round(random.randint(2500, 6500), -2)
+
+vetites2film = 2
+vetites2ido = "Hétfő"
+vetites2ar = round(random.randint(2500, 6500), -2)
+
+vetites3film = 3
+vetites3ido = "Hétfő"
+vetites3ar = round(random.randint(2500, 6500), -2)
+
+vetites4film = 5
+vetites4ido = "Hétfő"
+vetites4ar = round(random.randint(2500, 6500), -2)
+
+vetites5film = 1
+vetites5ido = "Kedd"
+vetites5ar = round(random.randint(2500, 6500), -2)
+
+vetites6film = 2
+vetites6ido = "Kedd"
+vetites6ar = round(random.randint(2500, 6500), -2)
+
+vetites7film = 3
+vetites7ido = "Kedd"
+vetites7ar = round(random.randint(2500, 6500), -2)
+
+vetites8film = 5
+vetites8ido = "Kedd"
+vetites8ar = round(random.randint(2500, 6500), -2)
+
+vetites9film = 1
+vetites9ido = "Szerda"
+vetites9ar = round(random.randint(2500, 6500), -2)
+
+vetites10film = 2
+vetites10ido = "Szerda"
+vetites10ar = round(random.randint(2500, 6500), -2)
+
+vetites11film = 3
+vetites11ido = "Szerda"
+vetites11ar = round(random.randint(2500, 6500), -2)
+
+vetites12film = 5
+vetites12ido = "Szerda"
+vetites12ar = round(random.randint(2500, 6500), -2)
+
+vetites13film = 1
+vetites13ido = "Csütörtök"
+vetites13ar = round(random.randint(2500, 6500), -2)
+
+vetites14film = 2
+vetites14ido = "Csütörtök"
+vetites14ar = round(random.randint(2500, 6500), -2)
+
+vetites15film = 3
+vetites15ido = "Csütörtök"
+vetites15ar = round(random.randint(2500, 6500), -2)
+
+vetites16film = 5
+vetites16ido = "Csütörtök"
+vetites16ar = round(random.randint(2500, 6500), -2)
+
+vetites17film = 1
+vetites17ido = "Péntek"
+vetites17ar = round(random.randint(2500, 6500), -2)
+
+vetites18film = 2
+vetites18ido = "Péntek"
+vetites18ar = round(random.randint(2500, 6500), -2)
+
+vetites19film = 3
+vetites19ido = "Péntek"
+vetites19ar = round(random.randint(2500, 6500), -2)
+
+vetites20film = 5
+vetites20ido = "Péntek"
+vetites20ar = round(random.randint(2500, 6500), -2)
+
+vetites21film = 1
+vetites21ido = "Szombat"
+vetites21ar = round(random.randint(2500, 6500), -2)
+
+vetites22film = 2
+vetites22ido = "Szombat"
+vetites22ar = round(random.randint(2500, 6500), -2)
+
+vetites23film = 3
+vetites23ido = "Szombat"
+vetites23ar = round(random.randint(2500, 6500), -2)
+
+vetites24film = 5
+vetites24ido = "Szombat"
+vetites24ar = round(random.randint(2500, 6500), -2)
+
+vetites25film = 1
+vetites25ido = "Hétfő"
+vetites25ar = round(random.randint(2500, 6500), -2)
+
+vetites26film = 2
+vetites26ido = "Hétfő"
+vetites26ar = round(random.randint(2500, 6500), -2)
+
+vetites27film = 3
+vetites27ido = "Hétfő"
+vetites27ar = round(random.randint(2500, 6500), -2)
+
+vetites28film = 5
+vetites28ido = "Hétfő"
+vetites28ar = round(random.randint(2500, 6500), -2)
+
+adatbazis()
 
 root = Window(themename="superhero")
 root.title("MoziTown")
