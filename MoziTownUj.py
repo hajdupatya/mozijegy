@@ -45,20 +45,45 @@ def adatbazis():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             vetites_id INT NOT NULL,
             nev VARCHAR(50) NOT NULL,
+            hely INT NOT NULL,
             FOREIGN KEY (vetites_id) REFERENCES vetites(id) );"""
         cur.execute(jegytable)
         add_film(dunenev, dunehossz, dunedate, dunedesc)
         add_film(mostnev, mosthossz, mostdate, mostdesc)
         add_film(imadlaknev, imadlakhossz, imadlakdate, imadlakdesc)
-        add_film(kingnev, kinghossz, kingdate, kingdesc)
         add_film(mehesznev, meheszhossz, meheszdate, meheszdesc)
+        add_film(kingnev, kinghossz, kingdate, kingdesc)
+        add_film(godzillanev, godzillahossz, godzilladate, godzilladesc)
         add_film(pandanev, pandahossz, pandadate, pandadesc)
         add_film(szellemirtoknev, szellemirtokhossz, szellemirtokdate, szellemirtokdesc)
         add_vetites(vetites1film, vetites1ido, vetites1ar)
         add_vetites(vetites2film, vetites2ido, vetites2ar)
         add_vetites(vetites3film, vetites3ido, vetites3ar)
         add_vetites(vetites4film, vetites4ido, vetites4ar)
-
+        add_vetites(vetites5film, vetites5ido, vetites5ar)
+        add_vetites(vetites6film, vetites6ido, vetites6ar)
+        add_vetites(vetites7film, vetites7ido, vetites7ar)
+        add_vetites(vetites8film, vetites8ido, vetites8ar)
+        add_vetites(vetites9film, vetites9ido, vetites4ar)
+        add_vetites(vetites10film, vetites10ido, vetites10ar)
+        add_vetites(vetites11film, vetites11ido, vetites11ar)
+        add_vetites(vetites12film, vetites12ido, vetites12ar)
+        add_vetites(vetites13film, vetites13ido, vetites13ar)
+        add_vetites(vetites14film, vetites14ido, vetites14ar)
+        add_vetites(vetites15film, vetites15ido, vetites15ar)
+        add_vetites(vetites16film, vetites16ido, vetites16ar)
+        add_vetites(vetites17film, vetites17ido, vetites17ar)
+        add_vetites(vetites18film, vetites18ido, vetites18ar)
+        add_vetites(vetites19film, vetites19ido, vetites19ar)
+        add_vetites(vetites20film, vetites20ido, vetites20ar)
+        add_vetites(vetites21film, vetites21ido, vetites21ar)
+        add_vetites(vetites22film, vetites22ido, vetites22ar)
+        add_vetites(vetites23film, vetites23ido, vetites23ar)
+        add_vetites(vetites24film, vetites24ido, vetites24ar)
+        add_vetites(vetites25film, vetites25ido, vetites25ar)
+        add_vetites(vetites26film, vetites26ido, vetites26ar)
+        add_vetites(vetites27film, vetites27ido, vetites27ar)
+        add_vetites(vetites28film, vetites28ido, vetites28ar)
 
 def add_film(nev: str, hossz: int, date: str, description: str):
     command = f"""INSERT INTO film VALUES (NULL,'{nev}','{hossz}','{date}','{description}')"""
@@ -1585,39 +1610,39 @@ vetites3film = 3
 vetites3ido = "Hétfő"
 vetites3ar = round(random.randint(2500, 6500), -2)
 
-vetites4film = 5
+vetites4film = 4
 vetites4ido = "Hétfő"
 vetites4ar = round(random.randint(2500, 6500), -2)
 
-vetites5film = 1
+vetites5film = 6
 vetites5ido = "Kedd"
 vetites5ar = round(random.randint(2500, 6500), -2)
 
-vetites6film = 2
+vetites6film = 3
 vetites6ido = "Kedd"
 vetites6ar = round(random.randint(2500, 6500), -2)
 
-vetites7film = 3
+vetites7film = 6
 vetites7ido = "Kedd"
 vetites7ar = round(random.randint(2500, 6500), -2)
 
-vetites8film = 5
+vetites8film = 8
 vetites8ido = "Kedd"
 vetites8ar = round(random.randint(2500, 6500), -2)
 
-vetites9film = 1
+vetites9film = 2
 vetites9ido = "Szerda"
 vetites9ar = round(random.randint(2500, 6500), -2)
 
-vetites10film = 2
+vetites10film = 7
 vetites10ido = "Szerda"
 vetites10ar = round(random.randint(2500, 6500), -2)
 
-vetites11film = 3
+vetites11film = 4
 vetites11ido = "Szerda"
 vetites11ar = round(random.randint(2500, 6500), -2)
 
-vetites12film = 5
+vetites12film = 8
 vetites12ido = "Szerda"
 vetites12ar = round(random.randint(2500, 6500), -2)
 
@@ -1625,23 +1650,23 @@ vetites13film = 1
 vetites13ido = "Csütörtök"
 vetites13ar = round(random.randint(2500, 6500), -2)
 
-vetites14film = 2
+vetites14film = 4
 vetites14ido = "Csütörtök"
 vetites14ar = round(random.randint(2500, 6500), -2)
 
-vetites15film = 3
+vetites15film = 7
 vetites15ido = "Csütörtök"
 vetites15ar = round(random.randint(2500, 6500), -2)
 
-vetites16film = 5
+vetites16film = 6
 vetites16ido = "Csütörtök"
 vetites16ar = round(random.randint(2500, 6500), -2)
 
-vetites17film = 1
+vetites17film = 6
 vetites17ido = "Péntek"
 vetites17ar = round(random.randint(2500, 6500), -2)
 
-vetites18film = 2
+vetites18film = 5
 vetites18ido = "Péntek"
 vetites18ar = round(random.randint(2500, 6500), -2)
 
@@ -1649,40 +1674,40 @@ vetites19film = 3
 vetites19ido = "Péntek"
 vetites19ar = round(random.randint(2500, 6500), -2)
 
-vetites20film = 5
+vetites20film = 2
 vetites20ido = "Péntek"
 vetites20ar = round(random.randint(2500, 6500), -2)
 
-vetites21film = 1
+vetites21film = 6
 vetites21ido = "Szombat"
 vetites21ar = round(random.randint(2500, 6500), -2)
 
-vetites22film = 2
+vetites22film = 5
 vetites22ido = "Szombat"
 vetites22ar = round(random.randint(2500, 6500), -2)
 
-vetites23film = 3
+vetites23film = 4
 vetites23ido = "Szombat"
 vetites23ar = round(random.randint(2500, 6500), -2)
 
-vetites24film = 5
+vetites24film = 1
 vetites24ido = "Szombat"
 vetites24ar = round(random.randint(2500, 6500), -2)
 
-vetites25film = 1
-vetites25ido = "Hétfő"
+vetites25film = 7
+vetites25ido = "Vasárnap"
 vetites25ar = round(random.randint(2500, 6500), -2)
 
-vetites26film = 2
-vetites26ido = "Hétfő"
+vetites26film = 4
+vetites26ido = "Vasárnap"
 vetites26ar = round(random.randint(2500, 6500), -2)
 
-vetites27film = 3
-vetites27ido = "Hétfő"
+vetites27film = 2
+vetites27ido = "Vasárnap"
 vetites27ar = round(random.randint(2500, 6500), -2)
 
-vetites28film = 5
-vetites28ido = "Hétfő"
+vetites28film = 1
+vetites28ido = "Vasárnap"
 vetites28ar = round(random.randint(2500, 6500), -2)
 
 adatbazis()
@@ -1703,7 +1728,7 @@ img6 = ImageTk.PhotoImage(Image.open("godzilla.png"))
 img7 = ImageTk.PhotoImage(Image.open("panda.png"))  
 img8 = ImageTk.PhotoImage(Image.open("szellemirtok.png"))
 
-cimframe=Labelframe(root, border=0, width=1400, )
+cimframe=Labelframe(root, border=0, width=1400)
 cimframe.pack()
 
 cim=Label(cimframe, text="MoziTown",font=("Terminal","35","bold"),justify=CENTER)
@@ -1713,6 +1738,7 @@ def time():
     string = strftime('%H:%M')
     ora.config(text=string)
     ora.after(1000, time)
+
 
 ora = Label(cimframe, font=('calibri', 20, 'bold'),foreground='white')
 ora.grid(row=0, padx=20,column=1)
