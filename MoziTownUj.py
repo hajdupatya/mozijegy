@@ -1966,7 +1966,6 @@ cim1.pack(pady=(6,0))
 buy1=Button(film1,text="Vásárlás", bootstyle="warning", command=lambda: dune_foglal_ablak())
 buy1.pack(pady=6,padx=15,)
 
-
 most = Canvas(film2, width=250, height=370, bg='white')
 most.pack()
 most.create_image(0, 0, anchor=NW, image=img2)
@@ -1974,7 +1973,6 @@ cim2=Label(film2,text="MOST VAGY SOHA!",font=('calibri', 15, 'bold'))
 cim2.pack(pady=(6,0))
 buy2=Button(film2,text="Vásárlás", bootstyle="warning", command=lambda: most_foglal_ablak())
 buy2.pack(pady=6,padx=15,)
-
 
 imadlak = Canvas(film3, width=250, height=370, bg='white')
 imadlak.pack()
@@ -1984,7 +1982,6 @@ cim3.pack(pady=(6,0))
 buy3=Button(film3,text="Vásárlás", bootstyle="warning", command=lambda: imadlak_foglal_ablak())
 buy3.pack(pady=6,padx=15,)
 
-
 mehesz = Canvas(film4, width=250, height=370, bg='white')
 mehesz.pack()
 mehesz.create_image(0, 0, anchor=NW, image=img4)
@@ -1992,6 +1989,5 @@ cim4=Label(film4,text="A MÉHÉSZ",font=('calibri', 15, 'bold'))
 cim4.pack(pady=(6,0))
 buy4=Button(film4,text="Vásárlás", bootstyle="warning", command=lambda: mehesz_foglal_ablak())
 buy4.pack(pady=6,padx=15,)
-
 
 root.mainloop()
