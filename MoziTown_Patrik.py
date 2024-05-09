@@ -5,20 +5,13 @@ from ttkbootstrap import *
 from tkinter import PhotoImage
 import datetime as dt
 from time import strftime
-import sqlite3
-from fpdf import *
-import unicodedata
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-import random
 
-def unicode_normalize(s):
-    return unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
-
-global img1, img2, img3, img4, img5, img6, img7, img8, email
-
-date = dt.datetime.now()
+root = Window(themename="superhero")
+root.title("MoziTown")
+root.geometry("1400x762")
+root.resizable(False,False)
+root.configure(background="#181D31")
+date=dt.datetime.now()
 
 def login():
     log_ablak = Toplevel(root)
@@ -43,558 +36,42 @@ def login():
     emailentry.pack(pady=(0,20))
     email=emailentry.get()
 
+
+
 login()
+img1 = ImageTk.PhotoImage(Image.open("J:\ikt\mozijegy\mozijegy\dune.png")) 
+img2 = ImageTk.PhotoImage(Image.open("J:\ikt\mozijegy\mozijegy\most.png"))  
+img3 = ImageTk.PhotoImage(Image.open("J:\ikt\mozijegy\mozijegy\imadlak.png"))  
+img4 = ImageTk.PhotoImage(Image.open("J:\ikt\mozijegy\mozijegy\mehesz.png"))  
+img5 = ImageTk.PhotoImage(Image.open("J:\ikt\mozijegy\mozijegy\king.png"))  
+img6 = ImageTk.PhotoImage(Image.open("J:\ikt\mozijegy\mozijegy\godzilla.png"))  
+img7 = ImageTk.PhotoImage(Image.open("J:\ikt\mozijegy\mozijegy\panda.png"))  
+img8 = ImageTk.PhotoImage(Image.open("J:\ikt\mozijegy\mozijegy\szellemirtok.png")) 
 
-con = sqlite3.connect("mozitown.db")
-cur = con.cursor()
-def adatbazis():
-    try:
-        cur.execute("SELECT * FROM film")
-        return
-    except Exception:
-        filmtable = """CREATE TABLE film (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            cim VARCHAR(50) NOT NULL,
-            hossz INT NOT NULL,
-            date DATE NOT NULL,
-            description TEXT NOT NULL );"""
-        cur.execute(filmtable)
-        vetitestable = """CREATE TABLE vetites (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            film_id INT NOT NULL,
-            ido VARCHAR(10) NOT NULL,
-            jegyar INT NOT NULL,
-            FOREIGN KEY (film_id) REFERENCES film(id) );"""
-        cur.execute(vetitestable)
-        jegytable = """CREATE TABLE jegy (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            vetites_id INT NOT NULL,
-            nev VARCHAR(50) NOT NULL,
-            hely INT NOT NULL,
-            FOREIGN KEY (vetites_id) REFERENCES vetites(id) );"""
-        cur.execute(jegytable)
-        add_film(dunenev, dunehossz, dunedate, dunedesc)
-        add_film(mostnev, mosthossz, mostdate, mostdesc)
-        add_film(imadlaknev, imadlakhossz, imadlakdate, imadlakdesc)
-        add_film(mehesznev, meheszhossz, meheszdate, meheszdesc)
-        add_film(kingnev, kinghossz, kingdate, kingdesc)
-        add_film(godzillanev, godzillahossz, godzilladate, godzilladesc)
-        add_film(pandanev, pandahossz, pandadate, pandadesc)
-        add_film(szellemirtoknev, szellemirtokhossz, szellemirtokdate, szellemirtokdesc)
-        add_vetites(vetites1film, vetites1ido, vetites1ar)
-        add_vetites(vetites2film, vetites2ido, vetites2ar)
-        add_vetites(vetites3film, vetites3ido, vetites3ar)
-        add_vetites(vetites4film, vetites4ido, vetites4ar)
-        add_vetites(vetites5film, vetites5ido, vetites5ar)
-        add_vetites(vetites6film, vetites6ido, vetites6ar)
-        add_vetites(vetites7film, vetites7ido, vetites7ar)
-        add_vetites(vetites8film, vetites8ido, vetites8ar)
-        add_vetites(vetites9film, vetites9ido, vetites4ar)
-        add_vetites(vetites10film, vetites10ido, vetites10ar)
-        add_vetites(vetites11film, vetites11ido, vetites11ar)
-        add_vetites(vetites12film, vetites12ido, vetites12ar)
-        add_vetites(vetites13film, vetites13ido, vetites13ar)
-        add_vetites(vetites14film, vetites14ido, vetites14ar)
-        add_vetites(vetites15film, vetites15ido, vetites15ar)
-        add_vetites(vetites16film, vetites16ido, vetites16ar)
-        add_vetites(vetites17film, vetites17ido, vetites17ar)
-        add_vetites(vetites18film, vetites18ido, vetites18ar)
-        add_vetites(vetites19film, vetites19ido, vetites19ar)
-        add_vetites(vetites20film, vetites20ido, vetites20ar)
-        add_vetites(vetites21film, vetites21ido, vetites21ar)
-        add_vetites(vetites22film, vetites22ido, vetites22ar)
-        add_vetites(vetites23film, vetites23ido, vetites23ar)
-        add_vetites(vetites24film, vetites24ido, vetites24ar)
-        add_vetites(vetites25film, vetites25ido, vetites25ar)
-        add_vetites(vetites26film, vetites26ido, vetites26ar)
-        add_vetites(vetites27film, vetites27ido, vetites27ar)
-        add_vetites(vetites28film, vetites28ido, vetites28ar)
+cimframe=Labelframe(root, border=0, width=1400, )
+cimframe.pack()
 
-def add_film(nev: str, hossz: int, date: str, description: str):
-    command = f"""INSERT INTO film VALUES (NULL,'{nev}','{hossz}','{date}','{description}')"""
-    cur.execute(command)
-    con.commit()
+cim=Label(cimframe, text="MoziTown",font=("Terminal","35","bold"),justify=CENTER)
+cim.grid(pady=20, padx=615, row=0,column=0, columnspan=2)
 
-def add_vetites(film_id: int, ido: str, jegyar: int):
-    command = f"""INSERT INTO vetites VALUES (NULL,'{film_id}','{ido}','{jegyar}')"""
-    cur.execute(command)
-    con.commit()
+def time():
+    string = strftime('%H:%M')
+    ora.config(text=string)
+    ora.after(1000, time)
+ 
+ora = Label(cimframe, font=('calibri', 20, 'bold'),foreground='white')
+ora.grid(row=0, padx=20,column=1)
+time()
 
-def add_jegy(vetites_id: int, nev: str, hely: int):
-    command = f"""INSERT INTO jegy VALUES (NULL,'{vetites_id}', '{nev}', '{hely}')"""
-    cur.execute(command)
-    con.commit()
 
-def send_email(to_email):
-        email_address = "mozitown@gmail.com"
-        email_password = "moziTown2000"
-        subject = "Sikeres vásárlás"
-        body = "Köszönjük a vásárlást!"
-        msg = MIMEMultipart()
-        msg["From"] = email_address
-        msg["To"] = to_email
-        msg["Subject"] = subject
-        msg.attach(MIMEText(body, "plain"))
-        try:
-            server = smtplib.SMTP("smtp.gmail.com", 587)
-            server.starttls()
-            server.login(email_address, email_password)
-            text = msg.as_string()
-            server.sendmail(email_address, to_email, text)
-            server.quit()
-            messagebox.showinfo("Sikeres vásárlás", "Az e-mail elküldve.")
-        except Exception as e:
-            messagebox.showerror("Hiba", f"Hiba történt az e-mail küldése közben: {str(e)}")
 
-def pdf_dune():
-    title = "Foglalás"
-    email = "11c-koban@ipari.vein.hu"
-    terem = "1"
-    class PDF(FPDF):
-        def header(self):
-            self.image("logo.png", 5, 5, 50, 50)
-            self.set_font("Helvetica", "BU", 20)
-            self.cell(40)
-            title_w = self.get_string_width(title) + 6
-            doc_w = self.w
-            self.set_x((doc_w - title_w) / 2)
-            self.set_line_width(1)
-            self.cell(title_w, 45, title, align="C")
-            self.set_font("Helvetica", "", 10)
-            self.cell(40)
-            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
-            self.ln(40)
-        def body(self):
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Részletek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email + " \nFilm neve: DUNE - MÁSODIK RÉSZ\nFilm hossza: 166 perc\nIdopont: Valamikor\nTerem száma: " + terem +"\nSzékek száma: Sok")
-            self.image("dune.png", 130, 75, 70, 100)
-            self.ln(40)
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Elérhetoségek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
-            self.ln(10)
-            self.set_font("Helvetica", "B", 13)
-            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
-            self.ln(10)
-            self.set_font("Times", "B", 15)
-            self.set_text_color(255, 0, 0)
-            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
-        def footer(self):
-            self.set_y(-15)
-            self.set_font("Helvetica", "I", 10)
-            self.set_text_color(0, 0, 0)
-            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
-    pdf = PDF("P", "mm", "A4")
-    pdf.set_title(title)
-    pdf.set_author("Mozitown csapata")
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
-    pdf.body()
-    pdf.output("pdf_dune.pdf")
-    send_email(email)
-
-def pdf_most():
-    title = "Foglalás"
-    email = "11c-koban@ipari.vein.hu"
-    terem = "1"
-    class PDF(FPDF):
-        def header(self):
-            self.image("logo.png", 5, 5, 50, 50)
-            self.set_font("Helvetica", "BU", 20)
-            self.cell(40)
-            title_w = self.get_string_width(title) + 6
-            doc_w = self.w
-            self.set_x((doc_w - title_w) / 2)
-            self.set_line_width(1)
-            self.cell(title_w, 45, title, align="C")
-            self.set_font("Helvetica", "", 10)
-            self.cell(40)
-            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
-            self.ln(40)
-        def body(self):
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Részletek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: MOST VAGY SOHA!\nFilm hossza: 135 perc\nIdopont: Valamikor\nTerem száma: " + terem +"\nSzékek száma: Sok")
-            self.image("most.png", 130, 75, 70, 100)
-            self.ln(40)
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Elérhetoségek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
-            self.ln(10)
-            self.set_font("Helvetica", "B", 13)
-            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
-            self.ln(10)
-            self.set_font("Times", "B", 15)
-            self.set_text_color(255, 0, 0)
-            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
-        def footer(self):
-            self.set_y(-15)
-            self.set_font("Helvetica", "I", 10)
-            self.set_text_color(0, 0, 0)
-            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
-    pdf = PDF("P", "mm", "A4")
-    pdf.set_title(title)
-    pdf.set_author("Mozitown csapata")
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
-    pdf.body()
-    pdf.output("pdf_most.pdf")
-    email = "11c-koban@ipari.vein.hu"
-    if email:
-        send_email(email)
-    else:
-        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
-
-def pdf_imadlak():
-    title = "Foglalás"
-    email = "11c-koban@ipari.vein.hu"
-    terem = "2"
-    class PDF(FPDF):
-        def header(self):
-            self.image("logo.png", 5, 5, 50, 50)
-            self.set_font("Helvetica", "BU", 20)
-            self.cell(40)
-            title_w = self.get_string_width(title) + 6
-            doc_w = self.w
-            self.set_x((doc_w - title_w) / 2)
-            self.set_line_width(1)
-            self.cell(title_w, 45, title, align="C")
-            self.set_font("Helvetica", "", 10)
-            self.cell(40)
-            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
-            self.ln(40)
-        def body(self):
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Részletek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: IMÁDLAK UTÁLNI\nFilm hossza: 100 perc\nIdopont: Valamikor\nTerem száma:" + terem + "\nSzékek száma: Sok")
-            self.image("imadlak.png", 130, 75, 70, 100)
-            self.ln(40)
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Elérhetoségek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
-            self.ln(10)
-            self.set_font("Helvetica", "B", 13)
-            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
-            self.ln(10)
-            self.set_font("Times", "B", 15)
-            self.set_text_color(255, 0, 0)
-            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
-        def footer(self):
-            self.set_y(-15)
-            self.set_font("Helvetica", "I", 10)
-            self.set_text_color(0, 0, 0)
-            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
-    pdf = PDF("P", "mm", "A4")
-    pdf.set_title(title)
-    pdf.set_author("Mozitown csapata")
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
-    pdf.body()
-    pdf.output("pdf_imadlak.pdf")
-    email = "11c-koban@ipari.vein.hu"
-    if email:
-        send_email(email)
-    else:
-        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
-
-def pdf_mehesz():
-    title = "Foglalás"
-    email = "11c-koban@ipari.vein.hu"
-    terem = "2"
-    class PDF(FPDF):
-        def header(self):
-            self.image("logo.png", 5, 5, 50, 50)
-            self.set_font("Helvetica", "BU", 20)
-            self.cell(40)
-            title_w = self.get_string_width(title) + 6
-            doc_w = self.w
-            self.set_x((doc_w - title_w) / 2)
-            self.set_line_width(1)
-            self.cell(title_w, 45, title, align="C")
-            self.set_font("Helvetica", "", 10)
-            self.cell(40)
-            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
-            self.ln(40)
-        def body(self):
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Részletek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: A MÉHÉSZ\nFilm hossza: 105 perc\nIdopont: Valamikor\nTerem száma: " + terem +"\nSzékek száma: Sok")
-            self.image("mehesz.png", 130, 75, 70, 100)
-            self.ln(40)
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Elérhetoségek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
-            self.ln(10)
-            self.set_font("Helvetica", "B", 13)
-            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
-            self.ln(10)
-            self.set_font("Times", "B", 15)
-            self.set_text_color(255, 0, 0)
-            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
-        def footer(self):
-            self.set_y(-15)
-            self.set_font("Helvetica", "I", 10)
-            self.set_text_color(0, 0, 0)
-            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
-    pdf = PDF("P", "mm", "A4")
-    pdf.set_title(title)
-    pdf.set_author("Mozitown csapata")
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
-    pdf.body()
-    pdf.output("pdf_mehesz.pdf")
-    email = "11c-koban@ipari.vein.hu"
-    if email:
-        send_email(email)
-    else:
-        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
-
-def pdf_king():
-    title = "Foglalás"
-    email = "11c-koban@ipari.vein.hu"
-    terem = "3"
-    class PDF(FPDF):
-        def header(self):
-            self.image("logo.png", 5, 5, 50, 50)
-            self.set_font("Helvetica", "BU", 20)
-            self.cell(40)
-            title_w = self.get_string_width(title) + 6
-            doc_w = self.w
-            self.set_x((doc_w - title_w) / 2)
-            self.set_line_width(1)
-            self.cell(title_w, 45, title, align="C")
-            self.set_font("Helvetica", "", 10)
-            self.cell(40)
-            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
-            self.ln(40)
-        def body(self):
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Részletek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: ARTÚR, A KIRÁLY\nFilm hossza: 107 perc\nIdopont: Valamikor\nTerem száma: " + terem +"\nSzékek száma: Sok")
-            self.image("king.png", 130, 75, 70, 100)
-            self.ln(40)
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Elérhetoségek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
-            self.ln(10)
-            self.set_font("Helvetica", "B", 13)
-            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
-            self.ln(10)
-            self.set_font("Times", "B", 15)
-            self.set_text_color(255, 0, 0)
-            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
-        def footer(self):
-            self.set_y(-15)
-            self.set_font("Helvetica", "I", 10)
-            self.set_text_color(0, 0, 0)
-            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
-    pdf = PDF("P", "mm", "A4")
-    pdf.set_title(title)
-    pdf.set_author("Mozitown csapata")
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
-    pdf.body()
-    pdf.output("pdf_king.pdf")
-    email = "11c-koban@ipari.vein.hu"
-    if email:
-        send_email(email)
-    else:
-        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
-
-def pdf_godzilla():
-    title = "Foglalás"
-    email = "11c-koban@ipari.vein.hu"
-    terem = "3"
-    class PDF(FPDF):
-        def header(self):
-            self.image("logo.png", 5, 5, 50, 50)
-            self.set_font("Helvetica", "BU", 20)
-            self.cell(40)
-            title_w = self.get_string_width(title) + 6
-            doc_w = self.w
-            self.set_x((doc_w - title_w) / 2)
-            self.set_line_width(1)
-            self.cell(title_w, 45, title, align="C")
-            self.set_font("Helvetica", "", 10)
-            self.cell(40)
-            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
-            self.ln(40)
-        def body(self):
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Részletek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: GODZILLA X KONG: AZ ÚJ BIRODALOM\nFilm hossza: 115 perc\nIdopont: Valamikor\nTerem száma: " + terem +"\nSzékek száma: Sok")
-            self.image("godzilla.png", 130, 75, 70, 100)
-            self.ln(40)
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Elérhetoségek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
-            self.ln(10)
-            self.set_font("Helvetica", "B", 13)
-            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
-            self.ln(10)
-            self.set_font("Times", "B", 15)
-            self.set_text_color(255, 0, 0)
-            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
-        def footer(self):
-            self.set_y(-15)
-            self.set_font("Helvetica", "I", 10)
-            self.set_text_color(0, 0, 0)
-            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
-    pdf = PDF("P", "mm", "A4")
-    pdf.set_title(title)
-    pdf.set_author("Mozitown csapata")
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
-    pdf.body()
-    pdf.output("pdf_godzilla.pdf")
-    email = "11c-koban@ipari.vein.hu"
-    if email:
-        send_email(email)
-    else:
-        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
-
-def pdf_panda():
-    title = "Foglalás"
-    email = "11c-koban@ipari.vein.hu"
-    terem = "4"
-    class PDF(FPDF):
-        def header(self):
-            self.image("logo.png", 5, 5, 50, 50)
-            self.set_font("Helvetica", "BU", 20)
-            self.cell(40)
-            title_w = self.get_string_width(title) + 6
-            doc_w = self.w
-            self.set_x((doc_w - title_w) / 2)
-            self.set_line_width(1)
-            self.cell(title_w, 45, title, align="C")
-            self.set_font("Helvetica", "", 10)
-            self.cell(40)
-            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
-            self.ln(40)
-        def body(self):
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Részletek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: KUNG FU PANDA 4\nFilm hossza: 94 perc\nIdopont: Valamikor\nTerem száma: " + terem + "\nSzékek száma: Sok")
-            self.image("panda.png", 130, 75, 70, 100)
-            self.ln(40)
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Elérhetoségek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
-            self.ln(10)
-            self.set_font("Helvetica", "B", 13)
-            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
-            self.ln(10)
-            self.set_font("Times", "B", 15)
-            self.set_text_color(255, 0, 0)
-            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
-        def footer(self):
-            self.set_y(-15)
-            self.set_font("Helvetica", "I", 10)
-            self.set_text_color(0, 0, 0)
-            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
-    pdf = PDF("P", "mm", "A4")
-    pdf.set_title(title)
-    pdf.set_author("Mozitown csapata")
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
-    pdf.body()
-    pdf.output("pdf_panda.pdf")
-    email = "11c-koban@ipari.vein.hu"
-    if email:
-        send_email(email)
-    else:
-        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
-
-def pdf_szellemirtok():
-    title = "Foglalás"
-    email = "11c-koban@ipari.vein.hu"
-    terem = "4"
-    class PDF(FPDF):
-        def header(self):
-            self.image("logo.png", 5, 5, 50, 50)
-            self.set_font("Helvetica", "BU", 20)
-            self.cell(40)
-            title_w = self.get_string_width(title) + 6
-            doc_w = self.w
-            self.set_x((doc_w - title_w) / 2)
-            self.set_line_width(1)
-            self.cell(title_w, 45, title, align="C")
-            self.set_font("Helvetica", "", 10)
-            self.cell(40)
-            self.multi_cell(0, 7, "MoziTown Kft.\n8200, Veszprém, Iskola utca 4.\nMinden jog fenntartva!", align="R")
-            self.ln(40)
-        def body(self):
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Részletek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Vásárló E-mail címe: " + email +" \nFilm neve: SZELLEMIRTÓK - A BORZONGÁS BIRODALMA\nFilm hossza: 125 perc\nIdopont: Valamikor\nTerem száma: " + terem + "\nSzékek száma: Sok")
-            self.image("szellemirtok.png", 130, 75, 70, 100)
-            self.ln(40)
-            self.set_font("Helvetica", "BU", 15)
-            self.cell(0, 5, "Elérhetoségek:")
-            self.ln(10)
-            self.set_font("Times", "", 13)
-            self.multi_cell(0, 10, "Telefonszám: +36208793145\nE-mail cím: mozitown@gmail.com")
-            self.ln(10)
-            self.set_font("Helvetica", "B", 13)
-            self.multi_cell(0, 5, "A jegy módosítására vagy törlésére lehetoséget ajánlunk a jegy megvásárlását követo harmadik napig. Ha a kiválasztott jegy korábbra szól, mint három nap, visszaváltásra csak mozinkban van lehetoség, a film kezdete elott legalább 3 órával.")
-            self.ln(10)
-            self.set_font("Times", "B", 15)
-            self.set_text_color(255, 0, 0)
-            self.cell(0, 5, "Köszönjük a vásárlást! Várjuk szeretettel!", align="C")
-        def footer(self):
-            self.set_y(-15)
-            self.set_font("Helvetica", "I", 10)
-            self.set_text_color(0, 0, 0)
-            self.cell(0, 10, f"{date:%Y, %B, %d}", align="C")
-    pdf = PDF("P", "mm", "A4")
-    pdf.set_title(title)
-    pdf.set_author("Mozitown csapata")
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
-    pdf.body()
-    pdf.output("pdf_szellemirtok.pdf")
-    email = "11c-koban@ipari.vein.hu"
-    if email:
-        send_email(email)
-    else:
-        messagebox.showerror("Hiba", "Kérlek add meg az e-mail címed!")
 
 def dune_foglal_ablak():
     fog_ablak = Toplevel(root)
     fog_ablak.geometry("1000x700")
     fog_ablak.title("DŰNE - MÁSODIK RÉSZ: Foglalás")
 
+#sor1
     global d
     d=0
     def foglal_sz1(b):
@@ -1079,7 +556,6 @@ def dune_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img1)
-
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
     fleiras = Label(fkeret, text="A távoli jövőben, a bolygóközi királyságok korában játszódó történetben két nagyhatalmú uralkodóház harcol az Arrakis bolygó feletti hatalomért, mert az ismert univerzumban egyedül az itteni végtelen sivatagban bányászható az a fűszer, amely lehetővé teszi a csillagközi utazást. A Harkonnenek ura kiirtatta az Atreides családot. De Paul Atreides herceg (Timothée Chalamet) megmenekült: a pusztaságban bujkál egy titokzatos, nomád nép, a fremenek között, ahol megismerkedik egy lánnyal, Csanival (Zendaya). Az a sorsa, hogy bosszút álljon a családjáért, háborúba vezesse a hozzá hű seregeket. Döntenie kell, hogy élete nagy szerelmét választja-e, vagy beteljesíti a végzetét. Az univerzum sorsa múlik azon, hogy mit határoz: és végül olyan útra lép, amely megváltoztathatja azt a szörnyű jövőt, amelyet egyedül ő lát előre.", font=("Times", 12, "bold"), width=50, justify="left", wraplength=400)
@@ -1184,13 +660,13 @@ def dune_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42", command=lambda:foglal_sz42(42))
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_dune())
+    ffoglal = Button(fkeret, text="Helyet foglalok")
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def most_foglal_ablak():
     fog_ablak = Toplevel(root)
     fog_ablak.geometry("1000x700")
-    fog_ablak.title("MOST VAGY SOHA!: Foglalás")
+    fog_ablak.title("MOST VAGY SOHA!")
 
     global mo
     mo=0
@@ -1781,13 +1257,13 @@ def most_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42", command=lambda:foglal_sz42(42))
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_most())
+    ffoglal = Button(fkeret, text="Helyet foglalok")
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def imadlak_foglal_ablak():
     fog_ablak = Toplevel(root)
     fog_ablak.geometry("1000x700")
-    fog_ablak.title("IMÁDLAK UTÁLNI: Foglalás")
+    fog_ablak.title("IMÁDLAK UTÁLNI")
 
     global im
     im=0
@@ -2276,7 +1752,7 @@ def imadlak_foglal_ablak():
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
-    fleiras = Label(fkeret, text="Találkoztak, együtt töltöttek egy éjszakát, és azóta gyűlölik egymást. Van ilyen. Bea (Sydney Sweeney) és Ben (Glen Powell) biztos, hogy nem illenek össze. Ha néha véletlenül összefutnak valahol, tutira elszabadul a pokol: csak bántani tudják egymást. De lesz egy esküvő Ausztráliában, amin mindkettejüknek részt kell venniük. Nincs kibúvó, nincs duma: utazniuk kell. Néhány napon, néhány bulin, néhány vacsorán keresztül el kell viselniük egymás közelségét, miközben egy gyönyörű tengerparti házban ott kavarog körülöttük egy csomó régi szerelmük, néhány kíváncsi rokonuk és kavarni mindig kész felmenőjük. Szóval, azt teszik, amit két érett, felnőtt, felelősségteljes ember ilyenkor tehet: úgy tesznek, mintha szerelmespár lennének - azt remélik, hogy így mindenkinek könnyebb lesz. Nem is tévedhettek volna nagyobbat.", font=("Times", 12, "bold"), width=50, justify="left", wraplength=400)
+    fleiras = Label(fkeret, text="Találkoztak, együtt töltöttek egy éjszakát, és azóta gyűlölik egymást. Van ilyen. Bea (Sydney Sweeney) és Ben (Glen Powell) biztos, hogy nem illenek össze. Ha néha véletlenül összefutnak valahol, tutira elszabadul a pokol: csak bántani tudják egymást. De lesz egy esküvő Ausztráliában, amin mindkettejüknek részt kell venniük. Nincs kibúvó, nincs duma: utazniuk kell. Néhány napon, néhány bulin, néhány vacsorán keresztül el kell viselniük egymás közelségét, miközben egy gyönyörű tengerparti házban ott kavarog körülöttük egy csomó régi szerelmük, néhány kíváncsi rokonuk és kavarni mindig kész felmenőjük. Szóval, azt teszik, amit két érett, felnőtt, felelősségteljes ember ilyenkor tehet: úgy tesznek, mintha szerelmespár lennének – azt remélik, hogy így mindenkinek könnyebb lesz. Nem is tévedhettek volna nagyobbat.", font=("Times", 12, "bold"), width=50, justify="left", wraplength=400)
     fleiras.grid(row=0, column=0, columnspan=10)
     szek1 = Button(fkeret, state=NORMAL, text="01" ,command=lambda:foglal_sz1(1))
     szek1.grid(row=1, column=0, pady=10)
@@ -2378,13 +1854,13 @@ def imadlak_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42", command=lambda:foglal_sz42(42))
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_imadlak())
+    ffoglal = Button(fkeret, text="Helyet foglalok")
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def mehesz_foglal_ablak():
     fog_ablak = Toplevel(root)
     fog_ablak.geometry("1000x700")
-    fog_ablak.title("A MÉHÉSZ: Foglalás")
+    fog_ablak.title("A MÉHÉSZ")
 
     global meh
     meh=0
@@ -2975,610 +2451,13 @@ def mehesz_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42", command=lambda:foglal_sz42(42))
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_mehesz())
-    ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
-
-def king_foglal_ablak():
-    fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
-    fog_ablak.title("ARTÚR, A KIRÁLY: Foglalás")
-
-    global kin
-    kin=0
-    def foglal_sz1(b):
-        global kin
-        if b==1:
-            if kin==0 or kin%2==0:
-                szek1.config(bootstyle="warning")
-            else:
-                szek1.config(bootstyle="prkinary")
-        kin+=1
-
-    global kin2
-    kin2=0
-    def foglal_sz2(b):
-        global kin2
-        if b==2:
-            if kin2==0 or kin2%2==0:
-                szek2.config(bootstyle="warning")
-            else:
-                szek2.config(bootstyle="prkinary")
-        kin2+=1
-
-    global kin3
-    kin3=0
-    def foglal_sz3(b):
-        global kin3
-        if b==3:
-            if kin3==0 or kin3%2==0:
-                szek3.config(bootstyle="warning")
-            else:
-                szek3.config(bootstyle="prkinary")
-        kin3+=1
-
-    global kin4
-    kin4=0
-    def foglal_sz4(b):
-        global kin4
-        if b==4:
-            if kin4==0 or kin4%2==0:
-                szek4.config(bootstyle="warning")
-            else:
-                szek4.config(bootstyle="prkinary")
-        kin4+=1
-
-
-    global kin5
-    kin5=0
-    def foglal_sz5(b):
-        global kin5
-        if b==5:
-            if kin5==0 or kin5%2==0:
-                szek7.config(bootstyle="warning")
-            else:
-                szek7.config(bootstyle="prkinary")
-        kin5+=1
-
-    global kin6
-    kin6=0
-    def foglal_sz6(b):
-        global kin6
-        if b==6:
-            if kin6==0 or kin6%2==0:
-                szek8.config(bootstyle="warning")
-            else:
-                szek8.config(bootstyle="prkinary")
-        kin6+=1
-
-    global kin7
-    kin7=0
-    def foglal_sz7(b):
-        global kin7
-        if b==7:
-            if kin7==0 or kin7%2==0:
-                szek9.config(bootstyle="warning")
-            else:
-                szek9.config(bootstyle="prkinary")
-        kin7+=1
-
-    global kin8
-    kin8=0
-    def foglal_sz8(b):
-        global kin8
-        if b==8:
-            if kin8==0 or kin8%2==0:
-                szek10.config(bootstyle="warning")
-            else:
-                szek10.config(bootstyle="prkinary")
-        kin8+=1
-
-#sor2
-    global kin9
-    kin9=0
-    def foglal_sz9(b):
-        global kin9
-        if b==9:
-            if kin9==0 or kin9%2==0:
-                szek11.config(bootstyle="warning")
-            else:
-                szek11.config(bootstyle="prkinary")
-        kin9+=1
-
-    global kin10
-    kin10=0
-    def foglal_sz10(b):
-        global kin10
-        if b==10:
-            if kin10==0 or kin10%2==0:
-                szek12.config(bootstyle="warning")
-            else:
-                szek12.config(bootstyle="prkinary")
-        kin10+=1
-
-    global kin11
-    kin11=0
-    def foglal_sz11(b):
-        global kin11
-        if b==11:
-            if kin11==0 or kin11%2==0:
-                szek13.config(bootstyle="warning")
-            else:
-                szek13.config(bootstyle="prkinary")
-        kin11+=1
-
-    global kin12
-    kin12=0
-    def foglal_sz12(b):
-        global kin12
-        if b==12:
-            if kin12==0 or kin12%2==0:
-                szek14.config(bootstyle="warning")
-            else:
-                szek14.config(bootstyle="prkinary")
-        kin12+=1
-
-
-    global kin13
-    kin13=0
-    def foglal_sz13(b):
-        global kin13
-        if b==13:
-            if kin13==0 or kin13%2==0:
-                szek17.config(bootstyle="warning")
-            else:
-                szek17.config(bootstyle="prkinary")
-        kin13+=1
-
-    global kin14
-    kin14=0
-    def foglal_sz14(b):
-        global kin14
-        if b==14:
-            if kin14==0 or kin14%2==0:
-                szek18.config(bootstyle="warning")
-            else:
-                szek18.config(bootstyle="prkinary")
-        kin14+=1
-
-    global kin15
-    kin15=0
-    def foglal_sz15(b):
-        global kin15
-        if b==15:
-            if kin15==0 or kin15%2==0:
-                szek19.config(bootstyle="warning")
-            else:
-                szek19.config(bootstyle="prkinary")
-        kin15+=1
-
-    global kin16
-    kin16=0
-    def foglal_sz16(b):
-        global kin16
-        if b==16:
-            if kin16==0 or kin16%2==0:
-                szek20.config(bootstyle="warning")
-            else:
-                szek20.config(bootstyle="prkinary")
-        kin16+=1
-
-
-#sor3
-    global kin17
-    kin17=0
-    def foglal_sz17(b):
-        global kin17
-        if b==17:
-            if kin17==0 or kin17%2==0:
-                szek21.config(bootstyle="warning")
-            else:
-                szek21.config(bootstyle="prkinary")
-        kin17+=1
-
-    global kin18
-    kin18=0
-    def foglal_sz18(b):
-        global kin18
-        if b==18:
-            if kin18==0 or kin18%2==0:
-                szek22.config(bootstyle="warning")
-            else:
-                szek22.config(bootstyle="prkinary")
-        kin18+=1
-
-    global kin19
-    kin19=0
-    def foglal_sz19(b):
-        global kin19
-        if b==19:
-            if kin19==0 or kin19%2==0:
-                szek23.config(bootstyle="warning")
-            else:
-                szek23.config(bootstyle="prkinary")
-        kin19+=1
-
-    global kin20
-    kin20=0
-    def foglal_sz20(b):
-        global kin20
-        if b==20:
-            if kin20==0 or kin20%2==0:
-                szek24.config(bootstyle="warning")
-            else:
-                szek24.config(bootstyle="prkinary")
-        kin20+=1
-
-
-    global kin21
-    kin21=0
-    def foglal_sz21(b):
-        global kin21
-        if b==21:
-            if kin21==0 or kin21%2==0:
-                szek27.config(bootstyle="warning")
-            else:
-                szek27.config(bootstyle="prkinary")
-        kin21+=1
-
-    global kin22
-    kin22=0
-    def foglal_sz22(b):
-        global kin22
-        if b==22:
-            if kin22==0 or kin22%2==0:
-                szek28.config(bootstyle="warning")
-            else:
-                szek28.config(bootstyle="prkinary")
-        kin22+=1
-
-    global kin23
-    kin23=0
-    def foglal_sz23(b):
-        global kin23
-        if b==23:
-            if kin23==0 or kin23%2==0:
-                szek29.config(bootstyle="warning")
-            else:
-                szek29.config(bootstyle="prkinary")
-        kin23+=1
-
-    global kin24
-    kin24=0
-    def foglal_sz24(b):
-        global kin24
-        if b==24:
-            if kin24==0 or kin24%2==0:
-                szek30.config(bootstyle="warning")
-            else:
-                szek30.config(bootstyle="prkinary")
-        kin24+=1
-
-#sor4
-    
-    global kin25
-    kin25=0
-    def foglal_sz25(b):
-        global kin25
-        if b==25:
-            if kin25==0 or kin25%2==0:
-                szek31.config(bootstyle="warning")
-            else:
-                szek31.config(bootstyle="prkinary")
-        kin25+=1
-
-    global kin26
-    kin26=0
-    def foglal_sz26(b):
-        global kin26
-        if b==26:
-            if kin26==0 or kin26%2==0:
-                szek32.config(bootstyle="warning")
-            else:
-                szek32.config(bootstyle="prkinary")
-        kin26+=1
-
-    global kin27
-    kin27=0
-    def foglal_sz27(b):
-        global kin27
-        if b==27:
-            if kin27==0 or kin27%2==0:
-                szek33.config(bootstyle="warning")
-            else:
-                szek33.config(bootstyle="prkinary")
-        kin27+=1
-
-    global kin28
-    kin28=0
-    def foglal_sz28(b):
-        global kin28
-        if b==28:
-            if kin28==0 or kin28%2==0:
-                szek34.config(bootstyle="warning")
-            else:
-                szek34.config(bootstyle="prkinary")
-        kin28+=1
-
-
-    global kin29
-    kin29=0
-    def foglal_sz29(b):
-        global kin29
-        if b==29:
-            if kin29==0 or kin29%2==0:
-                szek37.config(bootstyle="warning")
-            else:
-                szek37.config(bootstyle="prkinary")
-        kin29+=1
-
-    global kin30
-    kin30=0
-    def foglal_sz30(b):
-        global kin30
-        if b==30:
-            if kin30==0 or kin30%2==0:
-                szek38.config(bootstyle="warning")
-            else:
-                szek38.config(bootstyle="prkinary")
-        kin30+=1
-
-    global kin31
-    kin31=0
-    def foglal_sz31(b):
-        global kin31
-        if b==31:
-            if kin31==0 or kin31%2==0:
-                szek39.config(bootstyle="warning")
-            else:
-                szek39.config(bootstyle="prkinary")
-        kin31+=1
-
-    global kin32
-    kin32=0
-    def foglal_sz32(b):
-        global kin32
-        if b==32:
-            if kin32==0 or kin32%2==0:
-                szek40.config(bootstyle="warning")
-            else:
-                szek40.config(bootstyle="prkinary")
-        kin32+=1
-
-#sor5
-    global kin33
-    kin33=0
-    def foglal_sz33(b):
-        global kin33
-        if b==33:
-            if kin33==0 or kin33%2==0:
-                szek41.config(bootstyle="warning")
-            else:
-                szek41.config(bootstyle="prkinary")
-        kin33+=1
-
-    global kin34
-    kin34=0
-    def foglal_sz34(b):
-        global kin34
-        if b==34:
-            if kin34==0 or kin34%2==0:
-                szek42.config(bootstyle="warning")
-            else:
-                szek42.config(bootstyle="prkinary")
-        kin34+=1
-
-    global kin35
-    kin35=0
-    def foglal_sz35(b):
-        global kin35
-        if b==35:
-            if kin35==0 or kin35%2==0:
-                szek43.config(bootstyle="warning")
-            else:
-                szek43.config(bootstyle="prkinary")
-        kin35+=1
-
-    global kin36
-    kin36=0
-    def foglal_sz36(b):
-        global kin36
-        if b==36:
-            if kin36==0 or kin36%2==0:
-                szek44.config(bootstyle="warning")
-            else:
-                szek44.config(bootstyle="prkinary")
-        kin36+=1
-
-
-    global kin37
-    kin37=0
-    def foglal_sz37(b):
-        global kin37
-        if b==37:
-            if kin37==0 or kin37%2==0:
-                szek45.config(bootstyle="warning")
-            else:
-                szek45.config(bootstyle="prkinary")
-        kin37+=1
-
-    global kin38
-    kin38=0
-    def foglal_sz38(b):
-        global kin38
-        if b==38:
-            if kin38==0 or kin38%2==0:
-                szek46.config(bootstyle="warning")
-            else:
-                szek46.config(bootstyle="prkinary")
-        kin38+=1
-
-    global kin39
-    kin39=0
-    def foglal_sz39(b):
-        global kin39
-        if b==39:
-            if kin39==0 or kin39%2==0:
-                szek47.config(bootstyle="warning")
-            else:
-                szek47.config(bootstyle="prkinary")
-        kin39+=1
-
-    global kin40
-    kin40=0
-    def foglal_sz40(b):
-        global kin40
-        if b==40:
-            if kin40==0 or kin40%2==0:
-                szek48.config(bootstyle="warning")
-            else:
-                szek48.config(bootstyle="prkinary")
-        kin40+=1
-
-    global kin41
-    kin41=0
-    def foglal_sz41(b):
-        global kin41
-        if b==41:
-            if kin41==0 or kin41%2==0:
-                szek49.config(bootstyle="warning")
-            else:
-                szek49.config(bootstyle="prkinary")
-        kin41+=1
-
-    global kin42
-    kin42=0
-    def foglal_sz42(b):
-        global kin42
-        if b==42:
-            if kin42==0 or kin42%2==0:
-                szek50.config(bootstyle="warning")
-            else:
-                szek50.config(bootstyle="prkinary")
-        kin42+=1
-
-    fcimkeret = LabelFrame(fog_ablak, border=0, padding=0, borderwidth=0)
-    fcimkeret.grid(row=0, column=0, columnspan=2)
-    Label.columnconfigure(fcimkeret, 1, weight=1)
-    fcim = Label(fcimkeret, text="ARTÚR, A KIRÁLY", font=("Terminal", 20, "bold"), justify="center", anchor="center", width=90)
-    fcim.grid(row=0, column=0, pady=5, sticky="nesw")
-
-    fkepkeret = LabelFrame(fog_ablak, height=370, border=0, padding=0, borderwidth=0)
-    fkepkeret.grid(row=1, column=0, padx=50, pady=100)
-    dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
-    dune_al.grid(row=0, column=0)
-    dune_al.create_image(0, 0, anchor=NW, image=img5)
-
-    fkeret = LabelFrame(fog_ablak, padding=10)
-    fkeret.grid(row=1, column=1)
-    fleiras = Label(fkeret, text="Michael Light (Mark Wahlberg) és elszánt csapata a Dominikai Köztársaság dzsungelében teszi próbára magát egy rendkívüli 10 napos, 700 kilométeres extrémsport-világbajnokságon. A kalandvágyó sportember életében ez az utolsó lehetőség, hogy a régen áhított első helyezést elérje, a túra során azonban váratlanul egy ágrólszakadt kóborkutya szegődik melléjük. Michael és a különös, mégis méltóságteljes állat között hamarosan megbonthatatlan barátság szövődik, és a verseny végére Michael számára a győzelem, a hűség és a barátság jelentése merőben új értelmet nyer.", font=("Times", 12, "bold"), width=50, justify="left", wraplength=400)
-    fleiras.grid(row=0, column=0, columnspan=10)
-    szek1 = Button(fkeret, state=NORMAL, text="01" ,command=lambda:foglal_sz1(1))
-    szek1.grid(row=1, column=0, pady=10)
-    szek2 = Button(fkeret, state=NORMAL, text="02", command=lambda:foglal_sz2(2))
-    szek2.grid(row=1, column=1)
-    szek3 = Button(fkeret, state=NORMAL, text="03", command=lambda:foglal_sz3(3))
-    szek3.grid(row=1, column=2)
-    szek4 = Button(fkeret, state=NORMAL, text="04", command=lambda:foglal_sz4(4))
-    szek4.grid(row=1, column=3)
-    szek5 = Label(fkeret, width=0)
-    szek5.grid(row=1, column=4)
-    szek6 = Label(fkeret, width=0)
-    szek6.grid(row=1, column=5)
-    szek7 = Button(fkeret, state=NORMAL, text="05", command=lambda:foglal_sz5(5))
-    szek7.grid(row=1, column=6)
-    szek8 = Button(fkeret, state=NORMAL, text="06" , command=lambda:foglal_sz6(6))
-    szek8.grid(row=1, column=7)
-    szek9 = Button(fkeret, state=NORMAL, text="07" , command=lambda:foglal_sz7(7))
-    szek9.grid(row=1, column=8)
-    szek10 = Button(fkeret, state=NORMAL, text="08", command=lambda:foglal_sz8(8))
-    szek10.grid(row=1, column=9)
-    szek11 = Button(fkeret, state=NORMAL, text="09", command=lambda:foglal_sz9(9))
-    szek11.grid(row=2, column=0, pady=10)
-    szek12 = Button(fkeret, state=NORMAL, text="10", command=lambda:foglal_sz10(10))
-    szek12.grid(row=2, column=1)
-    szek13 = Button(fkeret, state=NORMAL, text="11" , command=lambda:foglal_sz11(11))
-    szek13.grid(row=2, column=2)
-    szek14 = Button(fkeret, state=NORMAL, text="12", command=lambda:foglal_sz12(12))
-    szek14.grid(row=2, column=3)
-    szek15 = Label(fkeret, width=0)
-    szek15.grid(row=2, column=4)
-    szek16 = Label(fkeret, width=0)
-    szek16.grid(row=2, column=5)
-    szek17 = Button(fkeret, state=NORMAL, text="13" , command=lambda:foglal_sz13(13))
-    szek17.grid(row=2, column=6)
-    szek18 = Button(fkeret, state=NORMAL, text="14" , command=lambda:foglal_sz14(14))
-    szek18.grid(row=2, column=7)
-    szek19 = Button(fkeret, state=NORMAL, text="15", command=lambda:foglal_sz15(15))
-    szek19.grid(row=2, column=8)
-    szek20 = Button(fkeret, state=NORMAL, text="16", command=lambda:foglal_sz16(16))
-    szek20.grid(row=2, column=9)
-    szek21 = Button(fkeret, state=NORMAL, text="17", command=lambda:foglal_sz17(17))
-    szek21.grid(row=3, column=0, pady=10)
-    szek22 = Button(fkeret, state=NORMAL, text="18", command=lambda:foglal_sz18(18))
-    szek22.grid(row=3, column=1)
-    szek23 = Button(fkeret, state=NORMAL, text="19", command=lambda:foglal_sz19(19))
-    szek23.grid(row=3, column=2)
-    szek24 = Button(fkeret, state=NORMAL, text="20", command=lambda:foglal_sz20(20))
-    szek24.grid(row=3, column=3)
-    szek25 = Label(fkeret, width=0)
-    szek25.grid(row=3, column=4)
-    szek26 = Label(fkeret, width=0)
-    szek26.grid(row=3, column=5)
-    szek27 = Button(fkeret, state=NORMAL, text="21", command=lambda:foglal_sz21(21))
-    szek27.grid(row=3, column=6)
-    szek28 = Button(fkeret, state=NORMAL, text="22", command=lambda:foglal_sz22(22))
-    szek28.grid(row=3, column=7)
-    szek29 = Button(fkeret, state=NORMAL, text="23", command=lambda:foglal_sz23(23))
-    szek29.grid(row=3, column=8)
-    szek30 = Button(fkeret, state=NORMAL, text="24", command=lambda:foglal_sz24(24))
-    szek30.grid(row=3, column=9)
-    szek31 = Button(fkeret, state=NORMAL, text="25", command=lambda:foglal_sz25(25))
-    szek31.grid(row=4, column=0, pady=10)
-    szek32 = Button(fkeret, state=NORMAL, text="26", command=lambda:foglal_sz26(26))
-    szek32.grid(row=4, column=1)
-    szek33 = Button(fkeret, state=NORMAL, text="27", command=lambda:foglal_sz27(27))
-    szek33.grid(row=4, column=2)
-    szek34 = Button(fkeret, state=NORMAL, text="28", command=lambda:foglal_sz28(28))
-    szek34.grid(row=4, column=3)
-    szek35 = Label(fkeret, width=0)
-    szek35.grid(row=4, column=4)
-    szek36 = Label(fkeret, width=0)
-    szek36.grid(row=4, column=5)
-    szek37 = Button(fkeret, state=NORMAL, text="29" , command=lambda:foglal_sz29(29))
-    szek37.grid(row=4, column=6)
-    szek38 = Button(fkeret, state=NORMAL, text="30", command=lambda:foglal_sz30(30))
-    szek38.grid(row=4, column=7)
-    szek39 = Button(fkeret, state=NORMAL, text="31" , command=lambda:foglal_sz31(31))
-    szek39.grid(row=4, column=8)
-    szek40 = Button(fkeret, state=NORMAL, text="32", command=lambda:foglal_sz32(32))
-    szek40.grid(row=4, column=9)
-    szek41 = Button(fkeret, state=NORMAL, text="33" , command=lambda:foglal_sz33(33))
-    szek41.grid(row=5, column=0, pady=10)
-    szek42 = Button(fkeret, state=NORMAL, text="34", command=lambda:foglal_sz34(34))
-    szek42.grid(row=5, column=1)
-    szek43 = Button(fkeret, state=NORMAL, text="35", command=lambda:foglal_sz35(35))
-    szek43.grid(row=5, column=2)
-    szek44 = Button(fkeret, state=NORMAL, text="36", command=lambda:foglal_sz36(36))
-    szek44.grid(row=5, column=3)
-    szek45 = Button(fkeret, state=NORMAL, text="37", command=lambda:foglal_sz37(37))
-    szek45.grid(row=5, column=4)
-    szek46 = Button(fkeret, state=NORMAL, text="38", command=lambda:foglal_sz38(38))
-    szek46.grid(row=5, column=5)
-    szek47 = Button(fkeret, state=NORMAL, text="39", command=lambda:foglal_sz39(39))
-    szek47.grid(row=5, column=6)
-    szek48 = Button(fkeret, state=NORMAL, text="40", command=lambda:foglal_sz40(40))
-    szek48.grid(row=5, column=7)
-    szek49 = Button(fkeret, state=NORMAL, text="41", command=lambda:foglal_sz41(41))
-    szek49.grid(row=5, column=8)
-    szek50 = Button(fkeret, state=NORMAL, text="42", command=lambda:foglal_sz42(42))
-    szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_king())
+    ffoglal = Button(fkeret, text="Helyet foglalok")
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def godzilla_foglal_ablak():
     fog_ablak = Toplevel(root)
     fog_ablak.geometry("1000x700")
-    fog_ablak.title("GODZILLA X KONG: AZ ÚJ BIRODALOM: Foglalás")
+    fog_ablak.title("GODZILLA X KONG: AZ ÚJ BIRODALOM")
 
     global god
     god=0
@@ -4169,13 +3048,609 @@ def godzilla_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42", command=lambda:foglal_sz42(42))
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_godzilla())
+    ffoglal = Button(fkeret, text="Helyet foglalok")
+    ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
+
+def king_foglal_ablak():
+    fog_ablak = Toplevel(root)
+    fog_ablak.geometry("1000x700")
+    fog_ablak.title("ARTÚR, A KIRÁLY")
+
+    global kin
+    kin=0
+    def foglal_sz1(b):
+        global kin
+        if b==1:
+            if kin==0 or kin%2==0:
+                szek1.config(bootstyle="warning")
+            else:
+                szek1.config(bootstyle="prkinary")
+        kin+=1
+
+    global kin2
+    kin2=0
+    def foglal_sz2(b):
+        global kin2
+        if b==2:
+            if kin2==0 or kin2%2==0:
+                szek2.config(bootstyle="warning")
+            else:
+                szek2.config(bootstyle="prkinary")
+        kin2+=1
+
+    global kin3
+    kin3=0
+    def foglal_sz3(b):
+        global kin3
+        if b==3:
+            if kin3==0 or kin3%2==0:
+                szek3.config(bootstyle="warning")
+            else:
+                szek3.config(bootstyle="prkinary")
+        kin3+=1
+
+    global kin4
+    kin4=0
+    def foglal_sz4(b):
+        global kin4
+        if b==4:
+            if kin4==0 or kin4%2==0:
+                szek4.config(bootstyle="warning")
+            else:
+                szek4.config(bootstyle="prkinary")
+        kin4+=1
+
+
+    global kin5
+    kin5=0
+    def foglal_sz5(b):
+        global kin5
+        if b==5:
+            if kin5==0 or kin5%2==0:
+                szek7.config(bootstyle="warning")
+            else:
+                szek7.config(bootstyle="prkinary")
+        kin5+=1
+
+    global kin6
+    kin6=0
+    def foglal_sz6(b):
+        global kin6
+        if b==6:
+            if kin6==0 or kin6%2==0:
+                szek8.config(bootstyle="warning")
+            else:
+                szek8.config(bootstyle="prkinary")
+        kin6+=1
+
+    global kin7
+    kin7=0
+    def foglal_sz7(b):
+        global kin7
+        if b==7:
+            if kin7==0 or kin7%2==0:
+                szek9.config(bootstyle="warning")
+            else:
+                szek9.config(bootstyle="prkinary")
+        kin7+=1
+
+    global kin8
+    kin8=0
+    def foglal_sz8(b):
+        global kin8
+        if b==8:
+            if kin8==0 or kin8%2==0:
+                szek10.config(bootstyle="warning")
+            else:
+                szek10.config(bootstyle="prkinary")
+        kin8+=1
+
+#sor2
+    global kin9
+    kin9=0
+    def foglal_sz9(b):
+        global kin9
+        if b==9:
+            if kin9==0 or kin9%2==0:
+                szek11.config(bootstyle="warning")
+            else:
+                szek11.config(bootstyle="prkinary")
+        kin9+=1
+
+    global kin10
+    kin10=0
+    def foglal_sz10(b):
+        global kin10
+        if b==10:
+            if kin10==0 or kin10%2==0:
+                szek12.config(bootstyle="warning")
+            else:
+                szek12.config(bootstyle="prkinary")
+        kin10+=1
+
+    global kin11
+    kin11=0
+    def foglal_sz11(b):
+        global kin11
+        if b==11:
+            if kin11==0 or kin11%2==0:
+                szek13.config(bootstyle="warning")
+            else:
+                szek13.config(bootstyle="prkinary")
+        kin11+=1
+
+    global kin12
+    kin12=0
+    def foglal_sz12(b):
+        global kin12
+        if b==12:
+            if kin12==0 or kin12%2==0:
+                szek14.config(bootstyle="warning")
+            else:
+                szek14.config(bootstyle="prkinary")
+        kin12+=1
+
+
+    global kin13
+    kin13=0
+    def foglal_sz13(b):
+        global kin13
+        if b==13:
+            if kin13==0 or kin13%2==0:
+                szek17.config(bootstyle="warning")
+            else:
+                szek17.config(bootstyle="prkinary")
+        kin13+=1
+
+    global kin14
+    kin14=0
+    def foglal_sz14(b):
+        global kin14
+        if b==14:
+            if kin14==0 or kin14%2==0:
+                szek18.config(bootstyle="warning")
+            else:
+                szek18.config(bootstyle="prkinary")
+        kin14+=1
+
+    global kin15
+    kin15=0
+    def foglal_sz15(b):
+        global kin15
+        if b==15:
+            if kin15==0 or kin15%2==0:
+                szek19.config(bootstyle="warning")
+            else:
+                szek19.config(bootstyle="prkinary")
+        kin15+=1
+
+    global kin16
+    kin16=0
+    def foglal_sz16(b):
+        global kin16
+        if b==16:
+            if kin16==0 or kin16%2==0:
+                szek20.config(bootstyle="warning")
+            else:
+                szek20.config(bootstyle="prkinary")
+        kin16+=1
+
+
+#sor3
+    global kin17
+    kin17=0
+    def foglal_sz17(b):
+        global kin17
+        if b==17:
+            if kin17==0 or kin17%2==0:
+                szek21.config(bootstyle="warning")
+            else:
+                szek21.config(bootstyle="prkinary")
+        kin17+=1
+
+    global kin18
+    kin18=0
+    def foglal_sz18(b):
+        global kin18
+        if b==18:
+            if kin18==0 or kin18%2==0:
+                szek22.config(bootstyle="warning")
+            else:
+                szek22.config(bootstyle="prkinary")
+        kin18+=1
+
+    global kin19
+    kin19=0
+    def foglal_sz19(b):
+        global kin19
+        if b==19:
+            if kin19==0 or kin19%2==0:
+                szek23.config(bootstyle="warning")
+            else:
+                szek23.config(bootstyle="prkinary")
+        kin19+=1
+
+    global kin20
+    kin20=0
+    def foglal_sz20(b):
+        global kin20
+        if b==20:
+            if kin20==0 or kin20%2==0:
+                szek24.config(bootstyle="warning")
+            else:
+                szek24.config(bootstyle="prkinary")
+        kin20+=1
+
+
+    global kin21
+    kin21=0
+    def foglal_sz21(b):
+        global kin21
+        if b==21:
+            if kin21==0 or kin21%2==0:
+                szek27.config(bootstyle="warning")
+            else:
+                szek27.config(bootstyle="prkinary")
+        kin21+=1
+
+    global kin22
+    kin22=0
+    def foglal_sz22(b):
+        global kin22
+        if b==22:
+            if kin22==0 or kin22%2==0:
+                szek28.config(bootstyle="warning")
+            else:
+                szek28.config(bootstyle="prkinary")
+        kin22+=1
+
+    global kin23
+    kin23=0
+    def foglal_sz23(b):
+        global kin23
+        if b==23:
+            if kin23==0 or kin23%2==0:
+                szek29.config(bootstyle="warning")
+            else:
+                szek29.config(bootstyle="prkinary")
+        kin23+=1
+
+    global kin24
+    kin24=0
+    def foglal_sz24(b):
+        global kin24
+        if b==24:
+            if kin24==0 or kin24%2==0:
+                szek30.config(bootstyle="warning")
+            else:
+                szek30.config(bootstyle="prkinary")
+        kin24+=1
+
+#sor4
+    
+    global kin25
+    kin25=0
+    def foglal_sz25(b):
+        global kin25
+        if b==25:
+            if kin25==0 or kin25%2==0:
+                szek31.config(bootstyle="warning")
+            else:
+                szek31.config(bootstyle="prkinary")
+        kin25+=1
+
+    global kin26
+    kin26=0
+    def foglal_sz26(b):
+        global kin26
+        if b==26:
+            if kin26==0 or kin26%2==0:
+                szek32.config(bootstyle="warning")
+            else:
+                szek32.config(bootstyle="prkinary")
+        kin26+=1
+
+    global kin27
+    kin27=0
+    def foglal_sz27(b):
+        global kin27
+        if b==27:
+            if kin27==0 or kin27%2==0:
+                szek33.config(bootstyle="warning")
+            else:
+                szek33.config(bootstyle="prkinary")
+        kin27+=1
+
+    global kin28
+    kin28=0
+    def foglal_sz28(b):
+        global kin28
+        if b==28:
+            if kin28==0 or kin28%2==0:
+                szek34.config(bootstyle="warning")
+            else:
+                szek34.config(bootstyle="prkinary")
+        kin28+=1
+
+
+    global kin29
+    kin29=0
+    def foglal_sz29(b):
+        global kin29
+        if b==29:
+            if kin29==0 or kin29%2==0:
+                szek37.config(bootstyle="warning")
+            else:
+                szek37.config(bootstyle="prkinary")
+        kin29+=1
+
+    global kin30
+    kin30=0
+    def foglal_sz30(b):
+        global kin30
+        if b==30:
+            if kin30==0 or kin30%2==0:
+                szek38.config(bootstyle="warning")
+            else:
+                szek38.config(bootstyle="prkinary")
+        kin30+=1
+
+    global kin31
+    kin31=0
+    def foglal_sz31(b):
+        global kin31
+        if b==31:
+            if kin31==0 or kin31%2==0:
+                szek39.config(bootstyle="warning")
+            else:
+                szek39.config(bootstyle="prkinary")
+        kin31+=1
+
+    global kin32
+    kin32=0
+    def foglal_sz32(b):
+        global kin32
+        if b==32:
+            if kin32==0 or kin32%2==0:
+                szek40.config(bootstyle="warning")
+            else:
+                szek40.config(bootstyle="prkinary")
+        kin32+=1
+
+#sor5
+    global kin33
+    kin33=0
+    def foglal_sz33(b):
+        global kin33
+        if b==33:
+            if kin33==0 or kin33%2==0:
+                szek41.config(bootstyle="warning")
+            else:
+                szek41.config(bootstyle="prkinary")
+        kin33+=1
+
+    global kin34
+    kin34=0
+    def foglal_sz34(b):
+        global kin34
+        if b==34:
+            if kin34==0 or kin34%2==0:
+                szek42.config(bootstyle="warning")
+            else:
+                szek42.config(bootstyle="prkinary")
+        kin34+=1
+
+    global kin35
+    kin35=0
+    def foglal_sz35(b):
+        global kin35
+        if b==35:
+            if kin35==0 or kin35%2==0:
+                szek43.config(bootstyle="warning")
+            else:
+                szek43.config(bootstyle="prkinary")
+        kin35+=1
+
+    global kin36
+    kin36=0
+    def foglal_sz36(b):
+        global kin36
+        if b==36:
+            if kin36==0 or kin36%2==0:
+                szek44.config(bootstyle="warning")
+            else:
+                szek44.config(bootstyle="prkinary")
+        kin36+=1
+
+
+    global kin37
+    kin37=0
+    def foglal_sz37(b):
+        global kin37
+        if b==37:
+            if kin37==0 or kin37%2==0:
+                szek45.config(bootstyle="warning")
+            else:
+                szek45.config(bootstyle="prkinary")
+        kin37+=1
+
+    global kin38
+    kin38=0
+    def foglal_sz38(b):
+        global kin38
+        if b==38:
+            if kin38==0 or kin38%2==0:
+                szek46.config(bootstyle="warning")
+            else:
+                szek46.config(bootstyle="prkinary")
+        kin38+=1
+
+    global kin39
+    kin39=0
+    def foglal_sz39(b):
+        global kin39
+        if b==39:
+            if kin39==0 or kin39%2==0:
+                szek47.config(bootstyle="warning")
+            else:
+                szek47.config(bootstyle="prkinary")
+        kin39+=1
+
+    global kin40
+    kin40=0
+    def foglal_sz40(b):
+        global kin40
+        if b==40:
+            if kin40==0 or kin40%2==0:
+                szek48.config(bootstyle="warning")
+            else:
+                szek48.config(bootstyle="prkinary")
+        kin40+=1
+
+    global kin41
+    kin41=0
+    def foglal_sz41(b):
+        global kin41
+        if b==41:
+            if kin41==0 or kin41%2==0:
+                szek49.config(bootstyle="warning")
+            else:
+                szek49.config(bootstyle="prkinary")
+        kin41+=1
+
+    global kin42
+    kin42=0
+    def foglal_sz42(b):
+        global kin42
+        if b==42:
+            if kin42==0 or kin42%2==0:
+                szek50.config(bootstyle="warning")
+            else:
+                szek50.config(bootstyle="prkinary")
+        kin42+=1
+    fcimkeret = LabelFrame(fog_ablak, border=0, padding=0, borderwidth=0)
+    fcimkeret.grid(row=0, column=0, columnspan=2)
+    Label.columnconfigure(fcimkeret, 1, weight=1)
+    fcim = Label(fcimkeret, text="ARTÚR, A KIRÁLY", font=("Terminal", 20, "bold"), justify="center", anchor="center", width=90)
+    fcim.grid(row=0, column=0, pady=5, sticky="nesw")
+
+    fkepkeret = LabelFrame(fog_ablak, height=370, border=0, padding=0, borderwidth=0)
+    fkepkeret.grid(row=1, column=0, padx=50, pady=100)
+    dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
+    dune_al.grid(row=0, column=0)
+    dune_al.create_image(0, 0, anchor=NW, image=img5)
+
+    fkeret = LabelFrame(fog_ablak, padding=10)
+    fkeret.grid(row=1, column=1)
+    fleiras = Label(fkeret, text="Michael Light (Mark Wahlberg) és elszánt csapata a Dominikai Köztársaság dzsungelében teszi próbára magát egy rendkívüli 10 napos, 700 kilométeres extrémsport-világbajnokságon. A kalandvágyó sportember életében ez az utolsó lehetőség, hogy a régen áhított első helyezést elérje, a túra során azonban váratlanul egy ágrólszakadt kóborkutya szegődik melléjük. Michael és a különös, mégis méltóságteljes állat között hamarosan megbonthatatlan barátság szövődik, és a verseny végére Michael számára a győzelem, a hűség és a barátság jelentése merőben új értelmet nyer.", font=("Times", 12, "bold"), width=50, justify="left", wraplength=400)
+    fleiras.grid(row=0, column=0, columnspan=10)
+    szek1 = Button(fkeret, state=NORMAL, text="01" ,command=lambda:foglal_sz1(1))
+    szek1.grid(row=1, column=0, pady=10)
+    szek2 = Button(fkeret, state=NORMAL, text="02", command=lambda:foglal_sz2(2))
+    szek2.grid(row=1, column=1)
+    szek3 = Button(fkeret, state=NORMAL, text="03", command=lambda:foglal_sz3(3))
+    szek3.grid(row=1, column=2)
+    szek4 = Button(fkeret, state=NORMAL, text="04", command=lambda:foglal_sz4(4))
+    szek4.grid(row=1, column=3)
+    szek5 = Label(fkeret, width=0)
+    szek5.grid(row=1, column=4)
+    szek6 = Label(fkeret, width=0)
+    szek6.grid(row=1, column=5)
+    szek7 = Button(fkeret, state=NORMAL, text="05", command=lambda:foglal_sz5(5))
+    szek7.grid(row=1, column=6)
+    szek8 = Button(fkeret, state=NORMAL, text="06" , command=lambda:foglal_sz6(6))
+    szek8.grid(row=1, column=7)
+    szek9 = Button(fkeret, state=NORMAL, text="07" , command=lambda:foglal_sz7(7))
+    szek9.grid(row=1, column=8)
+    szek10 = Button(fkeret, state=NORMAL, text="08", command=lambda:foglal_sz8(8))
+    szek10.grid(row=1, column=9)
+    szek11 = Button(fkeret, state=NORMAL, text="09", command=lambda:foglal_sz9(9))
+    szek11.grid(row=2, column=0, pady=10)
+    szek12 = Button(fkeret, state=NORMAL, text="10", command=lambda:foglal_sz10(10))
+    szek12.grid(row=2, column=1)
+    szek13 = Button(fkeret, state=NORMAL, text="11" , command=lambda:foglal_sz11(11))
+    szek13.grid(row=2, column=2)
+    szek14 = Button(fkeret, state=NORMAL, text="12", command=lambda:foglal_sz12(12))
+    szek14.grid(row=2, column=3)
+    szek15 = Label(fkeret, width=0)
+    szek15.grid(row=2, column=4)
+    szek16 = Label(fkeret, width=0)
+    szek16.grid(row=2, column=5)
+    szek17 = Button(fkeret, state=NORMAL, text="13" , command=lambda:foglal_sz13(13))
+    szek17.grid(row=2, column=6)
+    szek18 = Button(fkeret, state=NORMAL, text="14" , command=lambda:foglal_sz14(14))
+    szek18.grid(row=2, column=7)
+    szek19 = Button(fkeret, state=NORMAL, text="15", command=lambda:foglal_sz15(15))
+    szek19.grid(row=2, column=8)
+    szek20 = Button(fkeret, state=NORMAL, text="16", command=lambda:foglal_sz16(16))
+    szek20.grid(row=2, column=9)
+    szek21 = Button(fkeret, state=NORMAL, text="17", command=lambda:foglal_sz17(17))
+    szek21.grid(row=3, column=0, pady=10)
+    szek22 = Button(fkeret, state=NORMAL, text="18", command=lambda:foglal_sz18(18))
+    szek22.grid(row=3, column=1)
+    szek23 = Button(fkeret, state=NORMAL, text="19", command=lambda:foglal_sz19(19))
+    szek23.grid(row=3, column=2)
+    szek24 = Button(fkeret, state=NORMAL, text="20", command=lambda:foglal_sz20(20))
+    szek24.grid(row=3, column=3)
+    szek25 = Label(fkeret, width=0)
+    szek25.grid(row=3, column=4)
+    szek26 = Label(fkeret, width=0)
+    szek26.grid(row=3, column=5)
+    szek27 = Button(fkeret, state=NORMAL, text="21", command=lambda:foglal_sz21(21))
+    szek27.grid(row=3, column=6)
+    szek28 = Button(fkeret, state=NORMAL, text="22", command=lambda:foglal_sz22(22))
+    szek28.grid(row=3, column=7)
+    szek29 = Button(fkeret, state=NORMAL, text="23", command=lambda:foglal_sz23(23))
+    szek29.grid(row=3, column=8)
+    szek30 = Button(fkeret, state=NORMAL, text="24", command=lambda:foglal_sz24(24))
+    szek30.grid(row=3, column=9)
+    szek31 = Button(fkeret, state=NORMAL, text="25", command=lambda:foglal_sz25(25))
+    szek31.grid(row=4, column=0, pady=10)
+    szek32 = Button(fkeret, state=NORMAL, text="26", command=lambda:foglal_sz26(26))
+    szek32.grid(row=4, column=1)
+    szek33 = Button(fkeret, state=NORMAL, text="27", command=lambda:foglal_sz27(27))
+    szek33.grid(row=4, column=2)
+    szek34 = Button(fkeret, state=NORMAL, text="28", command=lambda:foglal_sz28(28))
+    szek34.grid(row=4, column=3)
+    szek35 = Label(fkeret, width=0)
+    szek35.grid(row=4, column=4)
+    szek36 = Label(fkeret, width=0)
+    szek36.grid(row=4, column=5)
+    szek37 = Button(fkeret, state=NORMAL, text="29" , command=lambda:foglal_sz29(29))
+    szek37.grid(row=4, column=6)
+    szek38 = Button(fkeret, state=NORMAL, text="30", command=lambda:foglal_sz30(30))
+    szek38.grid(row=4, column=7)
+    szek39 = Button(fkeret, state=NORMAL, text="31" , command=lambda:foglal_sz31(31))
+    szek39.grid(row=4, column=8)
+    szek40 = Button(fkeret, state=NORMAL, text="32", command=lambda:foglal_sz32(32))
+    szek40.grid(row=4, column=9)
+    szek41 = Button(fkeret, state=NORMAL, text="33" , command=lambda:foglal_sz33(33))
+    szek41.grid(row=5, column=0, pady=10)
+    szek42 = Button(fkeret, state=NORMAL, text="34", command=lambda:foglal_sz34(34))
+    szek42.grid(row=5, column=1)
+    szek43 = Button(fkeret, state=NORMAL, text="35", command=lambda:foglal_sz35(35))
+    szek43.grid(row=5, column=2)
+    szek44 = Button(fkeret, state=NORMAL, text="36", command=lambda:foglal_sz36(36))
+    szek44.grid(row=5, column=3)
+    szek45 = Button(fkeret, state=NORMAL, text="37", command=lambda:foglal_sz37(37))
+    szek45.grid(row=5, column=4)
+    szek46 = Button(fkeret, state=NORMAL, text="38", command=lambda:foglal_sz38(38))
+    szek46.grid(row=5, column=5)
+    szek47 = Button(fkeret, state=NORMAL, text="39", command=lambda:foglal_sz39(39))
+    szek47.grid(row=5, column=6)
+    szek48 = Button(fkeret, state=NORMAL, text="40", command=lambda:foglal_sz40(40))
+    szek48.grid(row=5, column=7)
+    szek49 = Button(fkeret, state=NORMAL, text="41", command=lambda:foglal_sz41(41))
+    szek49.grid(row=5, column=8)
+    szek50 = Button(fkeret, state=NORMAL, text="42", command=lambda:foglal_sz42(42))
+    szek50.grid(row=5, column=9)
+    ffoglal = Button(fkeret, text="Helyet foglalok")
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def panda_foglal_ablak():
     fog_ablak = Toplevel(root)
     fog_ablak.geometry("1000x700")
-    fog_ablak.title("KUNG FU PANDA 4: Foglalás")
+    fog_ablak.title("KUNG FU PANDA 4")
 
     global pand
     pand=0
@@ -4649,7 +4124,6 @@ def panda_foglal_ablak():
             else:
                 szek50.config(bootstyle="prpandary")
         pand42+=1
-
     fcimkeret = LabelFrame(fog_ablak, border=0, padding=0, borderwidth=0)
     fcimkeret.grid(row=0, column=0, columnspan=2)
     Label.columnconfigure(fcimkeret, 1, weight=1)
@@ -4664,7 +4138,7 @@ def panda_foglal_ablak():
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
-    fleiras = Label(fkeret, text="Csaknem egy évtized után tavasszal visszatér a legkülönösebb kungfu mester a DreamWorks Animation fergeteges sorozatának új fejezetében. Bátor Sárkányharcosként végigcsinált három halált megvető kalandot, és most a sors újabb feladat elé állítja: pihenjen már egy kicsit. Pontosabban hogy legyen a Békevölgy szellemi vezetője. Ezzel van néhány nyilvánvaló probléma. Egyrészt Po annyit tud a szellemi vezetésről, mint a paleodiétáról, másrészt gyorsan találnia kell egy új Sárkányharcost, és ki kell képeznie, mielőtt átvehetné új, magas beosztását. Ám ami még rosszabb, mostanában láttak felbukkanni egy gonosz, nagyhatalmú varázslónőt, Kaméleont, aki apró gyík létére fel tudja venni bármilyen lény alakját, legyen az nagy vagy kicsi. És Kaméleon ráveti dülledt kis szemét a bölcsesség pálcájára, amivel hatalmában állna megidézni az összes gonosztevőt, akiket Po átküldött a szellemek birodalmába...", font=("Times", 12, "bold"), width=50, justify="left", wraplength=400)
+    fleiras = Label(fkeret, text="Bátor Sárkányharcosként végigcsinált három halált megvető kalandot, és most a sors újabb feladat elé állítja: pihenjen már egy kicsit. Pontosabban hogy legyen a Békevölgy szellemi vezetője. Ezzel van néhány nyilvánvaló probléma. Egyrészt Po annyit tud a szellemi vezetésről, mint a paleodiétáról, másrészt gyorsan találnia kell egy új Sárkányharcost, és ki kell képeznie, mielőtt átvehetné új, magas beosztását. Ám ami még rosszabb, mostanában láttak felbukkanni egy gonosz, nagyhatalmú varázslónőt, Kaméleont, aki apró gyík létére fel tudja venni bármilyen lény alakját, legyen az nagy vagy kicsi. És Kaméleon ráveti dülledt kis szemét a bölcsesség pálcájára, amivel hatalmában állna megidézni az összes gonosztevőt, akiket Po átküldött a szellemek birodalmába…", font=("Times", 12, "bold"), width=50, justify="left", wraplength=400)
     fleiras.grid(row=0, column=0, columnspan=10)
     szek1 = Button(fkeret, state=NORMAL, text="01" ,command=lambda:foglal_sz1(1))
     szek1.grid(row=1, column=0, pady=10)
@@ -4766,13 +4240,13 @@ def panda_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42", command=lambda:foglal_sz42(42))
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_panda())
+    ffoglal = Button(fkeret, text="Helyet foglalok")
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def szellemirtok_foglal_ablak():
     fog_ablak = Toplevel(root)
     fog_ablak.geometry("1000x700")
-    fog_ablak.title("SZELLEMIRTÓK - A BORZONGÁS BIRODALMA: Foglalás")
+    fog_ablak.title("SZELLEMIRTÓK - A BORZONGÁS BIRODALMA")
 
     global szel
     szel=0
@@ -5246,7 +4720,6 @@ def szellemirtok_foglal_ablak():
             else:
                 szek50.config(bootstyle="prszelary")
         szel42+=1
-
     fcimkeret = LabelFrame(fog_ablak, border=0, padding=0, borderwidth=0)
     fcimkeret.grid(row=0, column=0, columnspan=2)
     Label.columnconfigure(fcimkeret, 1, weight=1)
@@ -5363,195 +4836,10 @@ def szellemirtok_foglal_ablak():
     szek49.grid(row=5, column=8)
     szek50 = Button(fkeret, state=NORMAL, text="42", command=lambda:foglal_sz42(42))
     szek50.grid(row=5, column=9)
-    ffoglal = Button(fkeret, text="Helyet foglalok", bootstyle="info", command= lambda:pdf_szellemirtok())
+    ffoglal = Button(fkeret, text="Helyet foglalok")
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 
-dunenev = "DŰNE - MÁSODIK RÉSZ"
-dunehossz = 166
-dunedate = "2024-02-29"
-dunedesc = "A távoli jövőben, a bolygóközi királyságok korában játszódó történetben két nagyhatalmú uralkodóház harcol az Arrakis bolygó feletti hatalomért, mert az ismert univerzumban egyedül az itteni végtelen sivatagban bányászható az a fűszer, amely lehetővé teszi a csillagközi utazást. A Harkonnenek ura kiirtatta az Atreides családot. De Paul Atreides herceg (Timothée Chalamet) megmenekült: a pusztaságban bujkál egy titokzatos, nomád nép, a fremenek között, ahol megismerkedik egy lánnyal, Csanival (Zendaya). Az a sorsa, hogy bosszút álljon a családjáért, háborúba vezesse a hozzá hű seregeket. Döntenie kell, hogy élete nagy szerelmét választja-e, vagy beteljesíti a végzetét. Az univerzum sorsa múlik azon, hogy mit határoz: és végül olyan útra lép, amely megváltoztathatja azt a szörnyű jövőt, amelyet egyedül ő lát előre."
-
-mostnev = "MOST VAGY SOHA!"
-mosthossz = 135
-mostdate = "2024-03-14"
-mostdesc = "Amikor 1848. március 15-én a lánglelkű költő, Petőfi Sándor költeményével, a Nemzeti Dallal kirobbantja a magyar forradalmat, az osztrák elnyomók egy titkosügynököt bíznak meg a feladattal, hogy állítsa meg a felkelést."
-
-imadlaknev = "IMÁDLAK UTÁLNI"
-imadlakhossz = 100
-imadlakdate = "2024-01-18"
-imadlakdesc = "Találkoztak, együtt töltöttek egy éjszakát, és azóta gyűlölik egymást. Van ilyen. Bea (Sydney Sweeney) és Ben (Glen Powell) biztos, hogy nem illenek össze. Ha néha véletlenül összefutnak valahol, tutira elszabadul a pokol: csak bántani tudják egymást. De lesz egy esküvő Ausztráliában, amin mindkettejüknek részt kell venniük. Nincs kibúvó, nincs duma: utazniuk kell. Néhány napon, néhány bulin, néhány vacsorán keresztül el kell viselniük egymás közelségét, miközben egy gyönyörű tengerparti házban ott kavarog körülöttük egy csomó régi szerelmük, néhány kíváncsi rokonuk és kavarni mindig kész felmenőjük. Szóval, azt teszik, amit két érett, felnőtt, felelősségteljes ember ilyenkor tehet: úgy tesznek, mintha szerelmespár lennének – azt remélik, hogy így mindenkinek könnyebb lesz. Nem is tévedhettek volna nagyobbat.Amikor 1848. március 15-én a lánglelkű költő, Petőfi Sándor költeményével, a Nemzeti Dallal kirobbantja a magyar forradalmat, az osztrák elnyomók egy titkosügynököt bíznak meg a feladattal, hogy állítsa meg a felkelést."
-
-mehesznev = "A MÉHÉSZ"
-meheszhossz = 105
-meheszdate = "2024-01-11"
-meheszdesc = "Egy férfi egyszemélyes, brutális bosszúhadjáratának tétje országos szintűre nő, miután kiderül róla, hogy korábban a Méhészek néven ismert befolyásos és titkos szervezet ügynöke volt."
-
-kingnev = "ARTÚR, A KIRÁLY"
-kinghossz = 107
-kingdate = "2024-03-21"
-kingdesc = "Michael Light (Mark Wahlberg) és elszánt csapata a Dominikai Köztársaság dzsungelében teszi próbára magát egy rendkívüli 10 napos, 700 kilométeres extrémsport-világbajnokságon. A kalandvágyó sportember életében ez az utolsó lehetőség, hogy a régen áhított első helyezést elérje, a túra során azonban váratlanul egy ágrólszakadt kóborkutya szegődik melléjük. Michael és a különös, mégis méltóságteljes állat között hamarosan megbonthatatlan barátság szövődik, és a verseny végére Michael számára a győzelem, a hűség és a barátság jelentése merőben új értelmet nyer."
-
-godzillanev = "GODZILLA X KONG: AZ ÚJ BIRODALOM"
-godzillahossz = 115
-godzilladate = "2024-03-28"
-godzilladesc = "A mindent eldöntő, minden eddiginél nagyobb háború nem ért véget azzal, hogy Kong és Godzilla szembetalálkozott és összemérte az erejét. Mert az ember most már kénytelen belenyugodni, hogy nem ő a legerősebb a földön. És nem ismeri igazán a saját világát: várja még néhány eddig rejtve maradt meglepetés. Bujkál még valami a föld alatt, ami felébredt, és pusztítani akar. Az emberiség képtelen megállítani. Talán Kong is képtelen volna. És Godzilla is. De ha ők ketten összefognának, akkor esetleg megmenekülhetnének ők is és mi is…"
-
-pandanev = "KUNG FU PANDA 4"
-pandahossz = 94
-pandadate = "2024-03-21"
-pandadesc = "Csaknem egy évtized után tavasszal visszatér a legkülönösebb kungfu mester a DreamWorks Animation fergeteges sorozatának baresz új fejezetében. Bátor Sárkányharcosként végigcsinált három halált megvető kalandot, és most a sors újabb feladat elé állítja: pihenjen már egy kicsit. Pontosabban hogy legyen a Békevölgy szellemi vezetője. Ezzel van néhány nyilvánvaló probléma. Egyrészt Po annyit tud a szellemi vezetésről, mint a paleodiétáról, másrészt gyorsan találnia kell egy új Sárkányharcost, és ki kell képeznie, mielőtt átvehetné új, magas beosztását. Ám ami még rosszabb, mostanában láttak felbukkanni egy gonosz, nagy hatalmú varázslónőt, Kaméleont, aki apró gyík létére fel tudja venni bármilyen lény alakját, legyen az nagy vagy kicsi. És Kaméleon ráveti dülledt kis szemét a bölcsesség pálcájára, amivel hatalmában állna megidézni az összes gonosztevőt, akiket Po átküldött a szellemek birodalmába..."
-
-szellemirtoknev = "SZELLEMIRTÓK - A BORZONGÁS BIRODALMA"
-szellemirtokhossz = 125
-szellemirtokdate = "2024-04-11"
-szellemirtokdesc = "Kihez fordulsz nagy bajban? Kitől kérsz segítséget, amikor kísérteties lények vesznek üldözőbe? Az egyértelmű válasz: a Szellemirtókat! A legendás csapat azonban már nem az eredeti felállásban dolgozik. A változás ellenére a híres New York-i tűzoltóság viszont továbbra is működik. Itt találkoznak az új Szellemirtók, a Spengler család tagjai az eredeti csapattal, akik, mint kiderül, nem vonultak vissza, hanem egy titkos kísérleti laboratóriumot hoztak létre, hogy szellemirtó törekvéseiket újabb szintre emeljék. Terveik váratlan fordulatot vesznek, amikor egy ősi ereklyére bukkannak, amely rosszindulatú erőt szabadít fel. Most mind a tapasztalt, mind a fiatal Szellemirtóknak össze kell fogniuk, hogy meghiúsítsák a világ közelgő veszélyét – a közelgő és még inkább dermesztő jégkorszakot. A legendás film szereplőgárdája, köztük Bill Murray és Dan Aykroyd diadalmasan tér vissza, vegyítve a humort a sci-fivel és a hátborzongató találkozásokat a laza tréfálkozással. Hozzájuk csatlakoznak az új generációs színészek, mint Paul Rudd és Finn Wolfhard a szeretett saga folytatásában."
-
-vetites1film = 1
-vetites1ido = "Hétfő"
-vetites1ar = round(random.randint(2500, 6500), -2)
-
-vetites2film = 2
-vetites2ido = "Hétfő"
-vetites2ar = round(random.randint(2500, 6500), -2)
-
-vetites3film = 3
-vetites3ido = "Hétfő"
-vetites3ar = round(random.randint(2500, 6500), -2)
-
-vetites4film = 4
-vetites4ido = "Hétfő"
-vetites4ar = round(random.randint(2500, 6500), -2)
-
-vetites5film = 6
-vetites5ido = "Kedd"
-vetites5ar = round(random.randint(2500, 6500), -2)
-
-vetites6film = 3
-vetites6ido = "Kedd"
-vetites6ar = round(random.randint(2500, 6500), -2)
-
-vetites7film = 6
-vetites7ido = "Kedd"
-vetites7ar = round(random.randint(2500, 6500), -2)
-
-vetites8film = 8
-vetites8ido = "Kedd"
-vetites8ar = round(random.randint(2500, 6500), -2)
-
-vetites9film = 2
-vetites9ido = "Szerda"
-vetites9ar = round(random.randint(2500, 6500), -2)
-
-vetites10film = 7
-vetites10ido = "Szerda"
-vetites10ar = round(random.randint(2500, 6500), -2)
-
-vetites11film = 4
-vetites11ido = "Szerda"
-vetites11ar = round(random.randint(2500, 6500), -2)
-
-vetites12film = 8
-vetites12ido = "Szerda"
-vetites12ar = round(random.randint(2500, 6500), -2)
-
-vetites13film = 1
-vetites13ido = "Csütörtök"
-vetites13ar = round(random.randint(2500, 6500), -2)
-
-vetites14film = 4
-vetites14ido = "Csütörtök"
-vetites14ar = round(random.randint(2500, 6500), -2)
-
-vetites15film = 7
-vetites15ido = "Csütörtök"
-vetites15ar = round(random.randint(2500, 6500), -2)
-
-vetites16film = 6
-vetites16ido = "Csütörtök"
-vetites16ar = round(random.randint(2500, 6500), -2)
-
-vetites17film = 6
-vetites17ido = "Péntek"
-vetites17ar = round(random.randint(2500, 6500), -2)
-
-vetites18film = 5
-vetites18ido = "Péntek"
-vetites18ar = round(random.randint(2500, 6500), -2)
-
-vetites19film = 3
-vetites19ido = "Péntek"
-vetites19ar = round(random.randint(2500, 6500), -2)
-
-vetites20film = 2
-vetites20ido = "Péntek"
-vetites20ar = round(random.randint(2500, 6500), -2)
-
-vetites21film = 6
-vetites21ido = "Szombat"
-vetites21ar = round(random.randint(2500, 6500), -2)
-
-vetites22film = 5
-vetites22ido = "Szombat"
-vetites22ar = round(random.randint(2500, 6500), -2)
-
-vetites23film = 4
-vetites23ido = "Szombat"
-vetites23ar = round(random.randint(2500, 6500), -2)
-
-vetites24film = 1
-vetites24ido = "Szombat"
-vetites24ar = round(random.randint(2500, 6500), -2)
-
-vetites25film = 7
-vetites25ido = "Vasárnap"
-vetites25ar = round(random.randint(2500, 6500), -2)
-
-vetites26film = 4
-vetites26ido = "Vasárnap"
-vetites26ar = round(random.randint(2500, 6500), -2)
-
-vetites27film = 2
-vetites27ido = "Vasárnap"
-vetites27ar = round(random.randint(2500, 6500), -2)
-
-vetites28film = 1
-vetites28ido = "Vasárnap"
-vetites28ar = round(random.randint(2500, 6500), -2)
-
-adatbazis()
-
-root = Window(themename="superhero")
-root.title("MoziTown")
-root.geometry("1400x762")
-root.resizable(False,False)
-root.configure(background="#181D31")
-date=dt.datetime.now()
-
-img1 = ImageTk.PhotoImage(Image.open("dune.png")) 
-img2 = ImageTk.PhotoImage(Image.open("most.png"))  
-img3 = ImageTk.PhotoImage(Image.open("imadlak.png"))  
-img4 = ImageTk.PhotoImage(Image.open("mehesz.png"))  
-img5 = ImageTk.PhotoImage(Image.open("king.png"))  
-img6 = ImageTk.PhotoImage(Image.open("godzilla.png"))  
-img7 = ImageTk.PhotoImage(Image.open("panda.png"))  
-img8 = ImageTk.PhotoImage(Image.open("szellemirtok.png"))
-
-cimframe=Labelframe(root, border=0, width=1400)
-cimframe.pack()
-
-cim=Label(cimframe, text="MoziTown",font=("Terminal","35","bold"),justify=CENTER)
-cim.grid(pady=20, padx=615, row=0,column=0, columnspan=2)
-
-def time():
-    string = strftime('%H:%M')
-    ora.config(text=string)
-    ora.after(1000, time)
-
-
-ora = Label(cimframe, font=('calibri', 20, 'bold'),foreground='white')
-ora.grid(row=0, padx=20,column=1)
-time()
 
 def hetfo():
     mon.configure(bootstyle="warning")
@@ -5564,19 +4852,19 @@ def hetfo():
     musor.configure(text="Műsoron - hétfő")
     dune.create_image(0, 0, anchor=NW, image=img1)
     cim1.configure(text="DŰNE - MÁSODIK RÉSZ")
-    buy1.configure(command=lambda: dune_foglal_ablak())
+    buy1.configure(command=dune_foglal_ablak)
 
     most.create_image(0, 0, anchor=NW, image=img2)
     cim2.configure(text="MOST VAGY SOHA!")
-    buy2.configure(command=lambda: most_foglal_ablak())
+    buy2.configure(command=most_foglal_ablak)
 
     imadlak.create_image(0, 0, anchor=NW, image=img3)
     cim3.configure(text="IMÁDLAK UTÁLNI")
-    buy3.configure(command=lambda: imadlak_foglal_ablak())
+    buy3.configure(command=imadlak_foglal_ablak)
 
     mehesz.create_image(0, 0, anchor=NW, image=img4)
     cim4.configure(text="A MÉHÉSZ")
-    buy4.configure(command=lambda: mehesz_foglal_ablak())
+    buy4.configure(command=mehesz_foglal_ablak)
 
 def kedd():
     global img5
@@ -5590,19 +4878,19 @@ def kedd():
     musor.configure(text="Műsoron - kedd")
     dune.create_image(0, 0, anchor=NW, image=img5)
     cim1.configure(text="ARTÚR, A KIRÁLY")
-    buy1.configure(command=lambda: king_foglal_ablak())
+    buy1.configure(command=king_foglal_ablak)
 
     most.create_image(0, 0, anchor=NW, image=img3)
     cim2.configure(text="IMÁDLAK UTÁLNI")
-    buy2.configure(command=lambda: imadlak_foglal_ablak())
+    buy2.configure(command=imadlak_foglal_ablak)
 
     imadlak.create_image(0, 0, anchor=NW, image=img6)
     cim3.configure(text="GODZILLA X KONG: ...")
-    buy3.configure(command=lambda: godzilla_foglal_ablak())
+    buy3.configure(command=godzilla_foglal_ablak)
 
     mehesz.create_image(0, 0, anchor=NW, image=img8)
     cim4.configure(text="SZELLEMIRTÓK ...")
-    buy4.configure(command=lambda: szellemirtok_foglal_ablak())
+    buy4.configure(command=szellemirtok_foglal_ablak)
 
 def szerda():
     wed.configure(bootstyle="warning")
@@ -5615,19 +4903,19 @@ def szerda():
     musor.configure(text="Műsoron - szerda")
     dune.create_image(0, 0, anchor=NW, image=img2)
     cim1.configure(text="MOST VAGY SOHA!")
-    buy1.configure(command=lambda: most_foglal_ablak())
+    buy1.configure(command=most_foglal_ablak)
 
     most.create_image(0, 0, anchor=NW, image=img7)
     cim2.configure(text="KUNG FU PANDA 4")
-    buy2.configure(command=lambda: panda_foglal_ablak())
+    buy2.configure(command=panda_foglal_ablak)
 
     imadlak.create_image(0, 0, anchor=NW, image=img4)
     cim3.configure(text="A MÉHÉSZ")
-    buy3.configure(command=lambda: mehesz_foglal_ablak())
+    buy3.configure(command=mehesz_foglal_ablak)
 
     mehesz.create_image(0, 0, anchor=NW, image=img8)
     cim4.configure(text="SZELLEMIRTÓK ...")
-    buy4.configure(command=lambda: szellemirtok_foglal_ablak())
+    buy4.configure(command=szellemirtok_foglal_ablak)
 
 def csutotok():
     thu.configure(bootstyle="warning")
@@ -5640,19 +4928,19 @@ def csutotok():
     musor.configure(text="Műsoron - csütörtök")
     dune.create_image(0, 0, anchor=NW, image=img1)
     cim1.configure(text="DŰNE - MÁSODIK RÉSZ")
-    buy1.configure(command=lambda: dune_foglal_ablak())
+    buy1.configure(command=dune_foglal_ablak)
 
     most.create_image(0, 0, anchor=NW, image=img4)
     cim2.configure(text="A MÉHÉSZ")
-    buy2.configure(command=lambda: mehesz_foglal_ablak())
+    buy2.configure(command=mehesz_foglal_ablak)
 
     imadlak.create_image(0, 0, anchor=NW, image=img7)
     cim3.configure(text="KUNG FU PANDA 4")
-    buy3.configure(command=lambda: panda_foglal_ablak())
+    buy3.configure(command=panda_foglal_ablak)
 
     mehesz.create_image(0, 0, anchor=NW, image=img6)
     cim4.configure(text="GODZILLA X KONG: ...")
-    buy4.configure(command=lambda: godzilla_foglal_ablak())
+    buy4.configure(command=godzilla_foglal_ablak)
 
 def pentek():
     fri.configure(bootstyle="warning")
@@ -5663,21 +4951,21 @@ def pentek():
     sat.configure(bootstyle="warning-outline")
     sun.configure(bootstyle="warning-outline")
     musor.configure(text="Műsoron - péntek")
-    dune.create_image(0, 0, anchor=NW, image=img8)
+    dune.create_image(0, 0, anchor=NW, image=img6)
     cim1.configure(text="GODZILLA X KONG: ...")
-    buy1.configure(command=lambda: godzilla_foglal_ablak())
+    buy1.configure(command=godzilla_foglal_ablak)
 
     most.create_image(0, 0, anchor=NW, image=img5)
     cim2.configure(text="ARTÚR, A KIRÁLY")
-    buy2.configure(command=lambda: king_foglal_ablak())
+    buy2.configure(command=king_foglal_ablak)
 
     imadlak.create_image(0, 0, anchor=NW, image=img3)
     cim3.configure(text="IMÁDLAK UTÁLNI")
-    buy3.configure(command=lambda: imadlak_foglal_ablak())
+    buy3.configure(command=imadlak_foglal_ablak)
 
     mehesz.create_image(0, 0, anchor=NW, image=img2)
     cim4.configure(text="MOST VAGY SOHA!")
-    buy4.configure(command=lambda: most_foglal_ablak())
+    buy4.configure(command=most_foglal_ablak)
 
 def szombat():
     sat.configure(bootstyle="warning")
@@ -5690,19 +4978,19 @@ def szombat():
     musor.configure(text="Műsoron - szombat")
     dune.create_image(0, 0, anchor=NW, image=img6)
     cim1.configure(text="GODZILLA X KONG: ...",)
-    buy1.configure(command=lambda: godzilla_foglal_ablak())
+    buy1.configure(command=godzilla_foglal_ablak)
 
     most.create_image(0, 0, anchor=NW, image=img5)
     cim2.configure(text="ARTÚR, A KIRÁLY")
-    buy2.configure(command=lambda: king_foglal_ablak())
+    buy2.configure(command=king_foglal_ablak)
 
     imadlak.create_image(0, 0, anchor=NW, image=img4)
     cim3.configure(text="A MÉHÉSZ")
-    buy3.configure(command=lambda: mehesz_foglal_ablak())
+    buy3.configure(command=mehesz_foglal_ablak)
 
     mehesz.create_image(0, 0, anchor=NW, image=img1)
     cim4.configure(text="DŰNE - MÁSODIK RÉSZ")
-    buy4.configure(command=lambda: dune_foglal_ablak())
+    buy4.configure(command=dune_foglal_ablak)
 
 def vasarnap():
     sun.configure(bootstyle="warning")
@@ -5715,22 +5003,23 @@ def vasarnap():
     musor.configure(text="Műsoron - vasárnap")
     dune.create_image(0, 0, anchor=NW, image=img7)
     cim1.configure(text="KUNG FU PANDA 4")
-    buy1.configure(command=lambda: panda_foglal_ablak())
+    buy1.configure(command=panda_foglal_ablak)
 
     most.create_image(0, 0, anchor=NW, image=img4)
     cim2.configure(text="A MÉHÉSZ")
-    buy2.configure(command=lambda: mehesz_foglal_ablak())
+    buy2.configure(command=mehesz_foglal_ablak)
 
     imadlak.create_image(0, 0, anchor=NW, image=img2)
     cim3.configure(text="MOST VAGY SOHA!")
-    buy3.configure(command=lambda: most_foglal_ablak())
+    buy3.configure(command=most_foglal_ablak)
 
     mehesz.create_image(0, 0, anchor=NW, image=img1)
     cim4.configure(text="DŰNE - MÁSODIK RÉSZ")
-    buy4.configure(command=lambda: dune_foglal_ablak())
+    buy4.configure(command=dune_foglal_ablak)
 
 
 style=ttk.Style().configure("frame_style", background="#181D31")
+
 napokfram=LabelFrame(root, border=0,)
 napokfram.pack(pady=10)
 
@@ -5748,7 +5037,7 @@ sat=Button(napokfram,text="Szombat", bootstyle="warning-outline", command=szomba
 sat.grid(row=0, column=5,pady=(0,15),padx=15)
 sun=Button(napokfram,text="Vasárnap", bootstyle="warning-outline", command=vasarnap)
 sun.grid(row=0, column=6,pady=(0,15),padx=15)
-
+      
 musor=Label(root,text="Műsoron - hétfő",font=('calibri', 25, 'bold'),background="#181D31")
 musor.pack(pady=(0,8))
 
@@ -5772,7 +5061,7 @@ dune.pack()
 dune.create_image(0, 0, anchor=NW, image=img1)
 cim1=Label(film1,text="DŰNE - MÁSODIK RÉSZ",font=('calibri', 15, 'bold'))
 cim1.pack(pady=(6,0))
-buy1=Button(film1,text="Vásárlás", bootstyle="warning", command=lambda: dune_foglal_ablak())
+buy1=Button(film1,text="Vásárlás", bootstyle="warning",command=dune_foglal_ablak)
 buy1.pack(pady=6,padx=15,)
 
 most = Canvas(film2, width=250, height=370, bg='white')
@@ -5780,7 +5069,7 @@ most.pack()
 most.create_image(0, 0, anchor=NW, image=img2)
 cim2=Label(film2,text="MOST VAGY SOHA!",font=('calibri', 15, 'bold'))
 cim2.pack(pady=(6,0))
-buy2=Button(film2,text="Vásárlás", bootstyle="warning", command=lambda: most_foglal_ablak())
+buy2=Button(film2,text="Vásárlás", bootstyle="warning",command=most_foglal_ablak)
 buy2.pack(pady=6,padx=15,)
 
 imadlak = Canvas(film3, width=250, height=370, bg='white')
@@ -5788,7 +5077,7 @@ imadlak.pack()
 imadlak.create_image(0, 0, anchor=NW, image=img3)
 cim3=Label(film3,text="IMÁDLAK UTÁLNI",font=('calibri', 15, 'bold'))
 cim3.pack(pady=(6,0))
-buy3=Button(film3,text="Vásárlás", bootstyle="warning", command=lambda: imadlak_foglal_ablak())
+buy3=Button(film3,text="Vásárlás", bootstyle="warning",command=imadlak_foglal_ablak)
 buy3.pack(pady=6,padx=15,)
 
 mehesz = Canvas(film4, width=250, height=370, bg='white')
@@ -5796,7 +5085,6 @@ mehesz.pack()
 mehesz.create_image(0, 0, anchor=NW, image=img4)
 cim4=Label(film4,text="A MÉHÉSZ",font=('calibri', 15, 'bold'))
 cim4.pack(pady=(6,0))
-buy4=Button(film4,text="Vásárlás", bootstyle="warning", command=lambda: mehesz_foglal_ablak())
+buy4=Button(film4,text="Vásárlás", bootstyle="warning",command=mehesz_foglal_ablak)
 buy4.pack(pady=6,padx=15,)
-
 root.mainloop()
