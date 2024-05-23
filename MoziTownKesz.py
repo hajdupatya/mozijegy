@@ -642,7 +642,7 @@ def pdf_szellemirtok():
 
 def dune_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("DŰNE - MÁSODIK RÉSZ: Foglalás")
 
     global d
@@ -1326,7 +1326,7 @@ def dune_foglal_ablak():
 
 def most_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("MOST VAGY SOHA!: Foglalás")
 
     global mo
@@ -2008,7 +2008,7 @@ def most_foglal_ablak():
 
 def imadlak_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("IMÁDLAK UTÁLNI: Foglalás")
 
     global im
@@ -2692,7 +2692,7 @@ def imadlak_foglal_ablak():
 
 def mehesz_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("A MÉHÉSZ: Foglalás")
 
     global meh
@@ -3375,7 +3375,7 @@ def mehesz_foglal_ablak():
 
 def king_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("ARTÚR, A KIRÁLY: Foglalás")
 
     global kin
@@ -4057,7 +4057,7 @@ def king_foglal_ablak():
 
 def godzilla_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("GODZILLA X KONG: AZ ÚJ BIRODALOM: Foglalás")
 
     global god
@@ -4743,7 +4743,7 @@ def godzilla_foglal_ablak():
 
 def panda_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("KUNG FU PANDA 4: Foglalás")
 
     global pand
@@ -5427,7 +5427,7 @@ def panda_foglal_ablak():
 
 def szellemirtok_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("SZELLEMIRTÓK - A BORZONGÁS BIRODALMA: Foglalás")
 
     global szel
