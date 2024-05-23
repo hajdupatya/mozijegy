@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter.ttk import *
 from tkinter import messagebox
+from PIL import Image
+Image.CUBIC=Image.BICUBIC
 from ttkbootstrap import *
 from tkinter import PhotoImage
 import datetime as dt
@@ -1212,6 +1214,8 @@ def dune_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img1)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
@@ -1893,7 +1897,8 @@ def most_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img2)
-
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=2, column=0, pady=10)
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
     fleiras = Label(fkeret, text="Amikor 1848. március 15-én a lánglelkű költő, Petőfi Sándor költeményével, a Nemzeti Dallal kirobbantja a magyar forradalmat, az osztrák elnyomók egy titkosügynököt bíznak meg a feladattal, hogy állítsa meg a felkelést.", font=("Times", 12, "bold"), width=50, justify="left", wraplength=400)
@@ -2575,6 +2580,8 @@ def imadlak_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img3)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
@@ -3256,6 +3263,8 @@ def mehesz_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img4)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
@@ -3936,6 +3945,8 @@ def king_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img5)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
@@ -4620,6 +4631,8 @@ def godzilla_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img6)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
@@ -5302,6 +5315,8 @@ def panda_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img7)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
@@ -5983,6 +5998,8 @@ def szellemirtok_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img8)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
