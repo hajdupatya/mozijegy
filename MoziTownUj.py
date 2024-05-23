@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter.ttk import *
 from tkinter import messagebox
+from PIL import Image
+Image.CUBIC=Image.BICUBIC
 from ttkbootstrap import *
 from tkinter import PhotoImage
 import datetime as dt
@@ -203,6 +205,8 @@ def pdf_dune():
         pdf.add_page()
         pdf.body()
         pdf.output("pdf_dune.pdf")
+        siker=messagebox.showinfo("Sikeres foglalás","Foglalásodat sikeresen rögzítettük!")
+
     except:
         error=messagebox.showerror("Email cim","Adjon meg email címet!")
 
@@ -258,6 +262,7 @@ def pdf_most():
         pdf.add_page()
         pdf.body()
         pdf.output("pdf_most.pdf")
+        siker=messagebox.showinfo("Sikeres foglalás","Foglalásodat sikeresen rögzítettük!")
     except:
         error=messagebox.showerror("Email cim","Adjon meg email címet!")
 
@@ -314,6 +319,7 @@ def pdf_imadlak():
         pdf.add_page()
         pdf.body()
         pdf.output("pdf_imadlak.pdf")
+        siker=messagebox.showinfo("Sikeres foglalás","Foglalásodat sikeresen rögzítettük!")
     except:
         error=messagebox.showerror("Email cim","Adjon meg email címet!")
 
@@ -369,6 +375,7 @@ def pdf_mehesz():
         pdf.add_page()
         pdf.body()
         pdf.output("pdf_mehesz.pdf")
+        siker=messagebox.showinfo("Sikeres foglalás","Foglalásodat sikeresen rögzítettük!")
     except:
         error=messagebox.showerror("Email cim","Adjon meg email címet!")
 
@@ -424,6 +431,7 @@ def pdf_king():
         pdf.add_page()
         pdf.body()
         pdf.output("pdf_king.pdf")
+        siker=messagebox.showinfo("Sikeres foglalás","Foglalásodat sikeresen rögzítettük!")
     except:
         error=messagebox.showerror("Email cim","Adjon meg email címet!")    
 
@@ -480,6 +488,7 @@ def pdf_godzilla():
         pdf.add_page()
         pdf.body()
         pdf.output("pdf_godzilla.pdf")
+        siker=messagebox.showinfo("Sikeres foglalás","Foglalásodat sikeresen rögzítettük!")
     except:
         error=messagebox.showerror("Email cim","Adjon meg email címet!")
 
@@ -534,6 +543,7 @@ def pdf_panda():
         pdf.add_page()
         pdf.body()
         pdf.output("pdf_panda.pdf")
+        siker=messagebox.showinfo("Sikeres foglalás","Foglalásodat sikeresen rögzítettük!")
     except:
         error=messagebox.showerror("Email cim","Adjon meg email címet!")
 
@@ -588,15 +598,16 @@ def pdf_szellemirtok():
         pdf.add_page()
         pdf.body()
         pdf.output("pdf_szellemirtok.pdf")
+        siker=messagebox.showinfo("Sikeres foglalás","Foglalásodat sikeresen rögzítettük!")
     except:
         error=messagebox.showerror("Email cim","Adjon meg email címet!")
 
 
 def dune_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("DŰNE - MÁSODIK RÉSZ: Foglalás")
-
+    
     global d
     d=0
     def foglal_sz1(b):
@@ -1166,6 +1177,8 @@ def dune_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img1)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
@@ -1275,8 +1288,9 @@ def dune_foglal_ablak():
     ffoglal.grid(row=6, column=0, columnspan=10, pady=10)
 
 def most_foglal_ablak():
+
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("MOST VAGY SOHA!: Foglalás")
 
     global mo
@@ -1847,6 +1861,8 @@ def most_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img2)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
@@ -1957,7 +1973,7 @@ def most_foglal_ablak():
 
 def imadlak_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("IMÁDLAK UTÁLNI: Foglalás")
 
     global im
@@ -2529,6 +2545,8 @@ def imadlak_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img3)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
@@ -2639,7 +2657,7 @@ def imadlak_foglal_ablak():
 
 def mehesz_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("A MÉHÉSZ: Foglalás")
 
     global meh
@@ -3204,12 +3222,15 @@ def mehesz_foglal_ablak():
     Label.columnconfigure(fcimkeret, 1, weight=1)
     fcim = Label(fcimkeret, text="A MÉHÉSZ", font=("Terminal", 20, "bold"), justify="center", anchor="center", width=90)
     fcim.grid(row=0, column=0, pady=5, sticky="nesw")
+    
 
     fkepkeret = LabelFrame(fog_ablak, height=370, border=0, padding=0, borderwidth=0)
     fkepkeret.grid(row=1, column=0, padx=50, pady=100)
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
-    dune_al.grid(row=0, column=0)
+    dune_al.grid(row=1, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img4)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=2, column=0, pady=10)
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
@@ -3320,7 +3341,7 @@ def mehesz_foglal_ablak():
 
 def king_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("ARTÚR, A KIRÁLY: Foglalás")
 
     global kin
@@ -3890,6 +3911,8 @@ def king_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img5)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
@@ -4000,7 +4023,7 @@ def king_foglal_ablak():
 
 def godzilla_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("GODZILLA X KONG: AZ ÚJ BIRODALOM: Foglalás")
 
     global god
@@ -4574,7 +4597,9 @@ def godzilla_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img6)
-
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
+    
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
     fleiras = Label(fkeret, text="A mindent eldöntő, minden eddiginél nagyobb háború nem ért véget azzal, hogy Kong és Godzilla szembetalálkozott és összemérte az erejét. Mert az ember most már kénytelen belenyugodni, hogy nem ő a legerősebb a földön. És nem ismeri igazán a saját világát: várja még néhány eddig rejtve maradt meglepetés. Bujkál még valami a föld alatt, ami felébredt, és pusztítani akar. Az emberiség képtelen megállítani. Talán Kong is képtelen volna. És Godzilla is. De ha ők ketten összefognának, akkor esetleg megmenekülhetnének ők is és mi is…", font=("Times", 12, "bold"), width=50, justify="left", wraplength=400)
@@ -4684,7 +4709,7 @@ def godzilla_foglal_ablak():
 
 def panda_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("KUNG FU PANDA 4: Foglalás")
 
     global pand
@@ -5256,6 +5281,8 @@ def panda_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img7)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
@@ -5366,7 +5393,7 @@ def panda_foglal_ablak():
 
 def szellemirtok_foglal_ablak():
     fog_ablak = Toplevel(root)
-    fog_ablak.geometry("1000x700")
+    fog_ablak.geometry("1000x800")
     fog_ablak.title("SZELLEMIRTÓK - A BORZONGÁS BIRODALMA: Foglalás")
 
     global szel
@@ -5937,6 +5964,9 @@ def szellemirtok_foglal_ablak():
     dune_al = Canvas(fkepkeret, width=250, height=370, bg='white')
     dune_al.grid(row=0, column=0)
     dune_al.create_image(0, 0, anchor=NW, image=img8)
+    sadas=Meter(fkepkeret,bootstyle="warning")
+    sadas.grid(row=1, column=0, pady=10)
+
 
     fkeret = LabelFrame(fog_ablak, padding=10)
     fkeret.grid(row=1, column=1)
