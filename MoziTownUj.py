@@ -11,16 +11,34 @@ import unicodedata
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 import random
 
 def unicode_normalize(s):
     return unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
 
-global img1, img2, img3, img4, img5, img6, img7, img8, email
+global img1, img2, img3, img4, img5, img6, img7, img8
+
+dune_fog_szek=[]
+godzill_fog_szek=[]
+imadlak_fog_szek=[]
+king_fog_szek=[]
+mehesz_fog_szek=[]
+most_fog_szek=[]
+panda_fog_szek=[]
+szellemirtok_fog_szek=[]
 
 date = dt.datetime.now()
 
+def register():
+    global email
+    global nev
+    email=emailentry.get()
+    nev=neventry.get()
+    log_ablak.destroy()
+
 def login():
+    global log_ablak
     log_ablak = Toplevel(root)
     log_ablak.geometry("500x500")
     log_ablak.resizable(False,False)
@@ -28,22 +46,21 @@ def login():
 
     reg=Label(log_ablak, text="Regisztráció",font=("Arial","30","bold"))
     reg.pack( pady=(90,10))
-    global email
-    global nev
     log_frame=LabelFrame(log_ablak, padding=(85,20), border=5)
     log_frame.pack()
     n=Label(log_frame,text="Név: ",font=("Arial","18","bold"))
     n.pack(pady=(5,10))
+    global neventry
     neventry=Entry(log_frame,font=("Arial","14"))
     neventry.pack(pady=(0,10))
     nev=neventry.get()
     e=Label(log_frame,text="E-mail cím: ",font=("Arial","18","bold"))
     e.pack(pady=10)
+    global emailentry
     emailentry=Entry(log_frame,font=("Arial","14"))
     emailentry.pack(pady=(0,20))
-    email=emailentry.get()
-
-login()
+    reg=Button(log_frame,text="Regisztráció",command=lambda:register())
+    reg.pack()
 
 con = sqlite3.connect("mozitown.db")
 cur = con.cursor()
@@ -125,16 +142,19 @@ def add_jegy(vetites_id: int, nev: str, hely: int):
     cur.execute(command)
     con.commit()
 
-def send_email(to_email):
+def send_email(to_email, pdf):
         email_address = "mozitown@gmail.com"
-        email_password = "moziTown2000"
+        email_password = "qguq rqro zhil pxzf"
         subject = "Sikeres vásárlás"
         body = "Köszönjük a vásárlást!"
+        path_to_file = pdf
         msg = MIMEMultipart()
         msg["From"] = email_address
         msg["To"] = to_email
         msg["Subject"] = subject
         msg.attach(MIMEText(body, "plain"))
+        with open(path_to_file,'rb') as file:
+            msg.attach(MIMEApplication(file.read(), Name=pdf))
         try:
             server = smtplib.SMTP("smtp.gmail.com", 587)
             server.starttls()
@@ -195,8 +215,9 @@ def pdf_dune():
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
     pdf.body()
-    pdf.output("pdf_dune.pdf")
-    send_email(email)
+    pdfname = "pdf_dune.pdf"
+    pdf.output(pdfname)
+    send_email(email, pdfname)
 
 def pdf_most():
     title = "Foglalás"
@@ -5527,6 +5548,8 @@ root.geometry("1400x762")
 root.resizable(False,False)
 root.configure(background="#181D31")
 date=dt.datetime.now()
+
+login()
 
 img1 = ImageTk.PhotoImage(Image.open("dune.png")) 
 img2 = ImageTk.PhotoImage(Image.open("most.png"))  
